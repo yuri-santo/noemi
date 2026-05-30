@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Confirmações: 1 Aninho da Noemí</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600;700&family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        cursive: ['"Great Vibes"', 'cursive'],
+                        cute: ['"Baloo 2"', 'cursive'],
+                    },
+                    colors: {
+                        'ark-blue': '#87CEEB',
+                        'ark-darkblue': '#3B7DD8',
+                        'ark-gold': '#D4AF37',
+                        'ark-brown': '#6B4423',
+                        'ark-sand': '#F5F5DC',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            background: linear-gradient(180deg, #E0F6FF 0%, #FFF8E7 30%, #F5F5DC 70%, #E8F5E9 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.12);
+        }
+
+        .gold-text {
+            background: linear-gradient(to right, #B8860B 0%, #FFD700 40%, #FFF8C0 50%, #FFD700 60%, #B8860B 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: rainbowShift 4s linear infinite;
+        }
+
+        @keyframes rainbowShift {
+            0%, 100% { backgroundPosition: '0% 50%'; }
+            50% { backgroundPosition: '100% 50%'; }
+        }
+
+        .table-row { transition: all 0.2s ease; }
+        .table-row:hover { background: rgba(135, 206, 235, 0.1); }
+    </style>
+</head>
+<body class="text-gray-800 antialiased font-sans p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto">
+
+        <!-- Cabeçalho -->
+        <div class="glass-panel rounded-3xl p-6 sm:p-8 mb-6 text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-ark-gold via-yellow-400 to-ark-gold"></div>
+
+            <i class="fa-solid fa-sailboat text-5xl text-ark-darkblue mb-4 block opacity-60"></i>
+            <h1 class="font-cursive text-5xl sm:text-6xl gold-text mb-2">Noemí</h1>
+            <p class="font-sans text-sm tracking-[0.2em] uppercase text-ark-brown/70 mb-4">1 Aninho — Painel de Confirmações</p>
+
+            <div class="flex items-center justify-center gap-2 text-xs text-gray-400">
+                <i class="fa-solid fa-lock"></i>
+                <span>Área administrativa</span>
+            </div>
+        </div>
+
+        <!-- Cards de resumo -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            <div class="glass-panel rounded-2xl p-4 text-center">
+                <i class="fa-solid fa-users text-2xl text-ark-darkblue mb-2 block"></i>
+                <p class="text-xs text-gray-500 uppercase tracking-wider">Total de Registros</p>
+                <p id="stat-total" class="font-cute text-2xl text-ark-darkblue">0</p>
+            </div>
+            <div class="glass-panel rounded-2xl p-4 text-center">
+                <i class="fa-solid fa-circle-check text-2xl text-green-500 mb-2 block"></i>
+                <p class="text-xs text-gray-500 uppercase tracking-wider">Confirmados</p>
+                <p id="stat-going" class="font-cute text-2xl text-green-600">0</p>
+            </div>
+            <div class="glass-panel rounded-2xl p-4 text-center">
+                <i class="fa-solid fa-circle-xmark text-2xl text-gray-400 mb-2 block"></i>
+                <p class="text-xs text-gray-500 uppercase tracking-wider">Não Vão</p>
+                <p id="stat-notgoing" class="font-cute text-2xl text-gray-500">0</p>
+            </div>
+            <div class="glass-panel rounded-2xl p-4 text-center">
+                <i class="fa-solid fa-person text-2xl text-ark-brown mb-2 block"></i>
+                <p class="text-xs text-gray-500 uppercase tracking-wider">Total Pessoas</p>
+                <p id="stat-people" class="font-cute text-2xl text-ark-brown">0</p>
+            </div>
+        </div>
+
+        <!-- Tabela -->
+        <div class="glass-panel rounded-3xl p-4 sm:p-6 mb-6 overflow-hidden">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                <h2 class="font-cute text-xl text-ark-darkblue">
+                    <i class="fa-solid fa-list-check mr-2 text-ark-gold"></i>Registros
+                </h2>
+                <div class="flex gap-2">
+                    <button onclick="filterTable('all')" id="btn-all" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-ark-darkblue text-white transition-all hover:opacity-90">Todos</button>
+                    <button onclick="filterTable('going')" id="btn-going" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-200 text-gray-600 transition-all hover:bg-green-100 hover:text-green-700">Vão</button>
+                    <button onclick="filterTable('notgoing')" id="btn-notgoing" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-200 text-gray-600 transition-all hover:bg-red-100 hover:text-red-700">Não Vão</button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="border-b-2 border-gray-100 text-xs uppercase tracking-wider text-gray-400">
+                            <th class="pb-3 pr-4 font-semibold">Nome(s)</th>
+                            <th class="pb-3 pr-4 font-semibold text-center">Status</th>
+                            <th class="pb-3 font-semibold text-right">Data / Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <tr>
+                            <td colspan="3" class="py-12 text-center text-gray-400">
+                                <i class="fa-solid fa-inbox text-4xl block mb-2"></i>
+                                Nenhuma confirmação registrada ainda.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="flex flex-col sm:flex-row gap-3 justify-between items-center">
+            <button onclick="refreshData()" class="w-full sm:w-auto flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-ark-darkblue font-sans font-semibold text-sm py-3 px-6 rounded-xl border border-gray-200 shadow-sm transition-all hover:shadow-md">
+                <i class="fa-solid fa-rotate"></i> Atualizar dados
+            </button>
+            <button onclick="clearData()" class="w-full sm:w-auto flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 font-sans font-semibold text-sm py-3 px-6 rounded-xl border border-red-200 shadow-sm transition-all hover:shadow-md">
+                <i class="fa-solid fa-trash-can"></i> Limpar todos os registros
+            </button>
+        </div>
+
+        <p class="text-center text-xs text-gray-400 mt-6">
+            <i class="fa-solid fa-circle-info mr-1"></i> Os dados são salvos localmente neste navegador.
+        </p>
+    </div>
+
+    <script>
+        (function() {
+            const tableBody   = document.getElementById('table-body');
+            const statTotal   = document.getElementById('stat-total');
+            const statGoing   = document.getElementById('stat-going');
+            const statNotGoing = document.getElementById('stat-notgoing');
+            const statPeople  = document.getElementById('stat-people');
+            let currentFilter = 'all';
+
+            function loadData() {
+                try {
+                    return JSON.parse(localStorage.getItem('noemi_confirmations') || '[]');
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            function formatDate(iso) {
+                const d = new Date(iso);
+                return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            function render(filter) {
+                const records = loadData();
+
+                if (records.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="3" class="py-12 text-center text-gray-400"><i class="fa-solid fa-inbox text-4xl block mb-2"></i>Nenhuma confirmação registrada ainda.</td></tr>';
+                    statTotal.textContent = '0';
+                    statGoing.textContent = '0';
+                    statNotGoing.textContent = '0';
+                    statPeople.textContent = '0';
+                    return;
+                }
+
+                // Inverter para mostrar mais recentes primeiro
+                const display = [...records].reverse();
+
+                // Estatísticas
+                const totalRecords = records.length;
+                const goingRecords = records.filter(r => r.isGoing).length;
+                const notGoingRecords = records.filter(r => !r.isGoing).length;
+                let totalPeople = 0;
+                records.forEach(r => {
+                    if (r.isGoing && r.names) totalPeople += r.names.length;
+                });
+
+                statTotal.textContent = totalRecords;
+                statGoing.textContent = goingRecords;
+                statNotGoing.textContent = notGoingRecords;
+                statPeople.textContent = totalPeople;
+
+                // Filtrar
+                let filtered = display;
+                if (filter === 'going') filtered = display.filter(r => r.isGoing);
+                if (filter === 'notgoing') filtered = display.filter(r => !r.isGoing);
+
+                if (filtered.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="3" class="py-8 text-center text-gray-400">Nenhum registro neste filtro.</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = filtered.map(r => {
+                    const namesHtml = (r.names || ['—']).map(n =>
+                        '<span class="inline-block bg-ark-blue/10 text-ark-darkblue text-xs font-semibold px-2 py-1 rounded-full mr-1 mb-1">' + n + '</span>'
+                    ).join('');
+
+                    const statusHtml = r.isGoing
+                        ? '<span class="inline-flex items-center gap-1 text-green-600 font-semibold"><i class="fa-solid fa-circle-check text-sm"></i> Vai</span>'
+                        : '<span class="inline-flex items-center gap-1 text-gray-400 font-semibold"><i class="fa-solid fa-circle-xmark text-sm"></i> Não vai</span>';
+
+                    return '<tr class="table-row border-b border-gray-50">' +
+                        '<td class="py-3 pr-4">' + namesHtml + '</td>' +
+                        '<td class="py-3 pr-4 text-center">' + statusHtml + '</td>' +
+                        '<td class="py-3 text-right text-xs text-gray-400">' + formatDate(r.timestamp) + '</td>' +
+                        '</tr>';
+                }).join('');
+            }
+
+            function filterTable(filter) {
+                currentFilter = filter;
+                document.getElementById('btn-all').className = filter === 'all'
+                    ? 'px-3 py-1.5 rounded-full text-xs font-semibold bg-ark-darkblue text-white transition-all'
+                    : 'px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-200 text-gray-600 transition-all hover:bg-gray-300';
+                document.getElementById('btn-going').className = filter === 'going'
+                    ? 'px-3 py-1.5 rounded-full text-xs font-semibold bg-green-500 text-white transition-all'
+                    : 'px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-200 text-gray-600 transition-all hover:bg-green-100 hover:text-green-700';
+                document.getElementById('btn-notgoing').className = filter === 'notgoing'
+                    ? 'px-3 py-1.5 rounded-full text-xs font-semibold bg-red-400 text-white transition-all'
+                    : 'px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-200 text-gray-600 transition-all hover:bg-red-100 hover:text-red-700';
+                render(filter);
+            }
+
+            function clearData() {
+                if (confirm('Tem certeza que deseja limpar TODOS os registros de confirmação? Esta ação não pode ser desfeita.')) {
+                    localStorage.removeItem('noemi_confirmations');
+                    render(currentFilter);
+                }
+            }
+
+            function refreshData() {
+                render(currentFilter);
+            }
+
+            window.filterTable = filterTable;
+            window.clearData = clearData;
+            window.refreshData = refreshData;
+
+            // Init
+            render('all');
+
+            // Atualizar a cada 5 segundos
+            setInterval(() => render(currentFilter), 5000);
+        })();
+    </script>
+</body>
+</html>
