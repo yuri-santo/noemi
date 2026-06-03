@@ -80,9 +80,11 @@
             position: absolute;
             inset: 0;
             z-index: 2;
-            background: linear-gradient(160deg, #0a1a3e 0%, #163a6e 35%, #1e5fa0 65%, #2980b9 100%);
+            background:
+                linear-gradient(rgba(7,18,45,.18), rgba(7,18,45,.18)),
+                url('gif.gif') center center / cover no-repeat;
             opacity: 0;
-            transition: opacity 2.5s ease;
+            transition: none;
             pointer-events: none;
         }
         #blue-bg.show { opacity: 1; }
@@ -229,6 +231,13 @@
             overflow: hidden;
             padding: 0 0 1.5rem;
             color: #374151;
+        }
+        .invite-card.celebration-mode {
+            background: rgba(255,255,255,.08);
+            border-color: rgba(255,255,255,.16);
+            box-shadow: none;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
         }
 
         /* Faixa arco-íris sutil no topo interno */
@@ -791,7 +800,7 @@
             position: fixed;
             inset: 0;
             z-index: 80;
-            background: rgba(0, 0, 0, .65);  /* semi-transparente: vídeo visível atrás */
+            background: transparent;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1282,7 +1291,7 @@
     (function () {
 
         const COVER_HIDE_DELAY_MS = 200;
-        const INVITE_REVEAL_DELAY_MS = 13000;
+        const INVITE_REVEAL_DELAY_MS = 7000;
         const MUSIC_START_DELAY_MS = 5000;
 
         /* ── Referências ── */
@@ -1291,6 +1300,7 @@
         const video         = document.getElementById('cover-video');
         const coverScreen   = document.getElementById('cover-screen');
         const mainInvite    = document.getElementById('main-invite');
+        const inviteCard    = document.querySelector('.invite-card');
         const btnMusic      = document.getElementById('btn-music');
         const iconMusic     = document.getElementById('icon-music');
         const btnMute       = document.getElementById('btn-mute');
@@ -1346,6 +1356,17 @@
             return out;
         }
 
+        function activateGifBackground() {
+            blueBg.classList.add('show');
+            video.pause();
+            if (backdropVideo) backdropVideo.pause();
+        }
+
+        function setCelebrationMode(active) {
+            if (!inviteCard) return;
+            inviteCard.classList.toggle('celebration-mode', active);
+        }
+
         /* ─── Abrir convite ─── */
         function openInvite() {
             if (opened) return;
@@ -1364,8 +1385,9 @@
                 coverScreen.style.display = 'none';
             }, COVER_HIDE_DELAY_MS);
 
-            /* Exibe o convite apos 13 segundos de video */
+            /* Exibe o convite apos 7 segundos e troca para o gif */
             setTimeout(() => {
+                activateGifBackground();
                 mainInvite.classList.add('show');
                 requestAnimationFrame(() => requestAnimationFrame(() => {
                     mainInvite.classList.add('visible');
@@ -1393,11 +1415,6 @@
                 btnMute.classList.add('on');
             }, MUSIC_START_DELAY_MS);
 
-            /* Troca para fundo azul ao fim do vídeo (não bloqueia nada) */
-            video.addEventListener('ended', function handler() {
-                video.removeEventListener('ended', handler);
-                blueBg.classList.add('show');
-            });
         }
 
         /* Clique em qualquer lugar da capa */
@@ -1457,6 +1474,7 @@
 
         /* ─── Overlay aniversariante ─── */
         function showBirthdayOverlay() {
+            setCelebrationMode(true);
             bdImgWrap.classList.remove('spinning','stopped');
             bdText.classList.remove('show');
             bdOverlay.classList.add('show');
@@ -1478,6 +1496,7 @@
         }
 
         function showThankYou() {
+            setCelebrationMode(false);
             thankYou.style.opacity = '0';
             thankYou.style.display = 'block';
             void thankYou.offsetWidth;
@@ -1559,6 +1578,7 @@
             thankYou.style.opacity = '0';
 
             if (isGoing) {
+                activateGifBackground();
                 resIcon.className = 'fa-solid fa-heart';
                 resIcon.style.cssText = 'font-size:1.7rem;color:#16a34a;';
                 resRing.className = 'result-icon-ring green';
