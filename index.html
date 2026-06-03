@@ -42,16 +42,23 @@
             z-index: 0;
             overflow: hidden;
             background: #0a1929;
+            min-height: 100vh;
+            min-height: 100svh;
+            --video-focus-x: 50%;
+            --video-focus-y: 50%;
+            --video-scale: 1;
         }
 
         /* Vídeo: visível desde o carregamento (primeiro frame pausado) */
         #cover-video {
             position: absolute;
-            top: 50%; left: 50%;
-            min-width: 100%; min-height: 100%;
-            width: auto; height: auto;
-            transform: translate(-50%, -50%);
+            inset: 0;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
+            object-position: var(--video-focus-x) var(--video-focus-y);
+            transform: scale(var(--video-scale));
+            transform-origin: center center;
             display: block;
             /* Já aparece visível — mostra o primeiro frame pausado */
             opacity: 1;
@@ -914,7 +921,24 @@
         /* ════════════════════════════════════════════
            RESPONSIVO
            ════════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            #video-bg-layer {
+                min-height: 100dvh;
+                --video-focus-y: 38%;
+                --video-scale: 1.06;
+            }
+        }
         @media (max-width: 480px) {
+            #video-bg-layer {
+                min-height: 100dvh;
+                --video-focus-x: 54%;
+                --video-focus-y: 28%;
+                --video-scale: 1.12;
+            }
+            #cover-video {
+                width: 100%;
+                height: 100%;
+            }
             .ark-scene { height: 46px; }
             .parade-animal { font-size: 1.25rem; }
             .ark-boat { font-size: 1.9rem; }
@@ -922,7 +946,19 @@
             .rsvp-wrap { padding: 1.1rem; }
             .section { padding: 0 1.1rem; }
         }
+        @media (max-width: 480px) and (orientation: portrait) {
+            #video-bg-layer {
+                --video-focus-x: 58%;
+                --video-focus-y: 24%;
+                --video-scale: 1.16;
+            }
+        }
         @media (max-width: 360px) {
+            #video-bg-layer {
+                --video-focus-x: 60%;
+                --video-focus-y: 22%;
+                --video-scale: 1.2;
+            }
             .cover-title { font-size: 3rem; }
             #open-btn { font-size: .7rem; padding: .8rem 1.75rem; }
         }
