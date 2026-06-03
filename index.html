@@ -96,7 +96,7 @@
             text-align: center;
             cursor: pointer;
             padding: 1.5rem;
-            transition: opacity 0.9s ease;
+            transition: opacity 10s ease;
         }
         #cover-screen.out {
             opacity: 0;
@@ -1229,6 +1229,9 @@
     <script>
     (function () {
 
+        const INVITE_REVEAL_DELAY_MS = 10000;
+        const MUSIC_START_DELAY_MS = 5000;
+
         /* ── Referências ── */
         const audio         = document.getElementById('bg-music');
         const video         = document.getElementById('cover-video');
@@ -1299,16 +1302,18 @@
 
             /* Oculta a capa */
             coverScreen.classList.add('out');
-            setTimeout(() => { coverScreen.style.display = 'none'; }, 950);
+            setTimeout(() => {
+                coverScreen.style.display = 'none';
 
-            /* Exibe o convite */
-            mainInvite.classList.add('show');
-            requestAnimationFrame(() => requestAnimationFrame(() => {
-                mainInvite.classList.add('visible');
-            }));
-            setTimeout(handleReveal, 200);
+                /* Exibe o convite */
+                mainInvite.classList.add('show');
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    mainInvite.classList.add('visible');
+                }));
+                setTimeout(handleReveal, 200);
+            }, INVITE_REVEAL_DELAY_MS);
 
-            /* Música inicia 15 segundos após o clique */
+            /* Música inicia 5 segundos após o clique */
             setTimeout(() => {
                 audio.volume = 0;
                 audio.play()
@@ -1326,7 +1331,7 @@
                     .catch(() => {});
                 btnMusic.classList.add('on');
                 btnMute.classList.add('on');
-            }, 15000);
+            }, MUSIC_START_DELAY_MS);
 
             /* Troca para fundo azul ao fim do vídeo (não bloqueia nada) */
             video.addEventListener('ended', function handler() {
