@@ -41,33 +41,45 @@
             inset: 0;
             z-index: 0;
             overflow: hidden;
-            background: #0a1929;
+            background: #000;
             min-height: 100vh;
             min-height: 100svh;
             --video-focus-x: 50%;
             --video-focus-y: 50%;
-            --video-scale: 1;
         }
 
         /* Vídeo: visível desde o carregamento (primeiro frame pausado) */
+        #cover-video-backdrop,
         #cover-video {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            object-position: var(--video-focus-x) var(--video-focus-y);
-            transform: scale(var(--video-scale));
-            transform-origin: center center;
             display: block;
+            pointer-events: none;
             /* Já aparece visível — mostra o primeiro frame pausado */
             opacity: 1;
+        }
+        #cover-video {
+            z-index: 1;
+            object-fit: cover;
+            object-position: var(--video-focus-x) var(--video-focus-y);
+        }
+        #cover-video-backdrop {
+            z-index: 0;
+            opacity: 0;
+            object-fit: cover;
+            object-position: center center;
+            transform: scale(1.18);
+            filter: blur(20px) brightness(.62);
+            transition: opacity .35s ease;
         }
 
         /* Fundo azul exibido quando o vídeo termina */
         #blue-bg {
             position: absolute;
             inset: 0;
+            z-index: 2;
             background: linear-gradient(160deg, #0a1a3e 0%, #163a6e 35%, #1e5fa0 65%, #2980b9 100%);
             opacity: 0;
             transition: opacity 2.5s ease;
@@ -79,6 +91,7 @@
         #video-overlay {
             position: absolute;
             inset: 0;
+            z-index: 3;
             background: linear-gradient(
                 to bottom,
                 rgba(0,10,40,.42) 0%,
@@ -924,20 +937,25 @@
         @media (max-width: 768px) {
             #video-bg-layer {
                 min-height: 100dvh;
-                --video-focus-y: 44%;
-                --video-scale: .985;
+                --video-focus-y: 50%;
+            }
+            #cover-video {
+                object-fit: contain;
+            }
+            #cover-video-backdrop {
+                opacity: .9;
             }
         }
         @media (max-width: 480px) {
             #video-bg-layer {
                 min-height: 100dvh;
-                --video-focus-x: 52%;
-                --video-focus-y: 36%;
-                --video-scale: .96;
+                --video-focus-x: 50%;
+                --video-focus-y: 50%;
             }
             #cover-video {
                 width: 100%;
                 height: 100%;
+                object-fit: contain;
             }
             .ark-scene { height: 46px; }
             .parade-animal { font-size: 1.25rem; }
@@ -948,16 +966,14 @@
         }
         @media (max-width: 480px) and (orientation: portrait) {
             #video-bg-layer {
-                --video-focus-x: 54%;
-                --video-focus-y: 32%;
-                --video-scale: .94;
+                --video-focus-x: 50%;
+                --video-focus-y: 50%;
             }
         }
         @media (max-width: 360px) {
             #video-bg-layer {
-                --video-focus-x: 55%;
-                --video-focus-y: 30%;
-                --video-scale: .92;
+                --video-focus-x: 50%;
+                --video-focus-y: 50%;
             }
             .cover-title { font-size: 3rem; }
             #open-btn { font-size: .7rem; padding: .8rem 1.75rem; }
@@ -972,6 +988,9 @@
     <div id="video-bg-layer">
         <div id="blue-bg"></div>
         <!-- SEM autoplay — vídeo aparece pausado no primeiro frame -->
+        <video id="cover-video-backdrop" playsinline preload="auto" muted>
+            <source src="Video inicial.mp4" type="video/mp4">
+        </video>
         <video id="cover-video" playsinline preload="auto" muted>
             <source src="Video inicial.mp4" type="video/mp4">
         </video>
@@ -1270,6 +1289,7 @@
 
         /* ── Referências ── */
         const audio         = document.getElementById('bg-music');
+        const backdropVideo = document.getElementById('cover-video-backdrop');
         const video         = document.getElementById('cover-video');
         const coverScreen   = document.getElementById('cover-screen');
         const mainInvite    = document.getElementById('main-invite');
@@ -1334,6 +1354,10 @@
             opened = true;
 
             /* Inicia o vídeo (estava pausado no primeiro frame) */
+            if (backdropVideo) {
+                backdropVideo.currentTime = video.currentTime;
+                backdropVideo.play().catch(() => {});
+            }
             video.play().catch(() => {});
 
             /* Oculta a capa */
