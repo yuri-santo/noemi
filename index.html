@@ -116,7 +116,7 @@
             text-align: center;
             cursor: pointer;
             padding: 1.5rem;
-            transition: opacity 10s ease;
+            transition: opacity .2s ease;
         }
         #cover-screen.out {
             opacity: 0;
@@ -1281,7 +1281,8 @@
     <script>
     (function () {
 
-        const INVITE_REVEAL_DELAY_MS = 10000;
+        const COVER_HIDE_DELAY_MS = 200;
+        const INVITE_REVEAL_DELAY_MS = 13000;
         const MUSIC_START_DELAY_MS = 5000;
 
         /* ── Referências ── */
@@ -1361,8 +1362,10 @@
             coverScreen.classList.add('out');
             setTimeout(() => {
                 coverScreen.style.display = 'none';
+            }, COVER_HIDE_DELAY_MS);
 
-                /* Exibe o convite */
+            /* Exibe o convite apos 13 segundos de video */
+            setTimeout(() => {
                 mainInvite.classList.add('show');
                 requestAnimationFrame(() => requestAnimationFrame(() => {
                     mainInvite.classList.add('visible');
