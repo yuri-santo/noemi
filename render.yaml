@@ -3,10 +3,6 @@ services:
     name: noemi-1-aninho
     env: static
     staticPublishPath: .
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
     headers:
       - path: /*
         name: Cache-Control
