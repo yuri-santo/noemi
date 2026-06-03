@@ -88,6 +88,7 @@
             pointer-events: none;
         }
         #blue-bg.show { opacity: 1; }
+        #blue-bg.fade { transition: opacity 1.5s ease; }
 
         /* Overlay sutil de escurecimento sobre o vídeo */
         #video-overlay {
@@ -187,6 +188,10 @@
         }
         #open-btn:hover  { transform: scale(1.05); }
         #open-btn:active { transform: scale(.97); }
+        #open-btn:focus-visible {
+            outline: 3px solid var(--gold-light);
+            outline-offset: 4px;
+        }
         @keyframes btnPulse {
             0%,100% { box-shadow: 0 0 0  0px rgba(212,175,55,.65), 0 8px 32px rgba(0,0,0,.35); }
             50%      { box-shadow: 0 0 0 18px rgba(212,175,55,0),   0 8px 32px rgba(0,0,0,.35); }
@@ -231,13 +236,12 @@
             overflow: hidden;
             padding: 0 0 1.5rem;
             color: #374151;
+            transition: background .8s ease, border-color .8s ease, box-shadow .8s ease, backdrop-filter .8s ease, opacity .6s ease;
         }
         .invite-card.celebration-mode {
-            background: rgba(255,255,255,.08);
-            border-color: rgba(255,255,255,.16);
-            box-shadow: none;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .6s ease;
         }
 
         /* Faixa arco-íris sutil no topo interno */
@@ -349,6 +353,7 @@
             font-style: italic;
             color: #4b5563;
             line-height: 1.65;
+            transition: background .6s ease, border-color .6s ease, color .6s ease;
         }
         .bible-ref {
             display: block;
@@ -388,7 +393,7 @@
             flex-direction: column;
             align-items: center;
             gap: .4rem;
-            transition: transform .25s, box-shadow .25s;
+            transition: transform .25s, box-shadow .25s, background .6s ease, border-color .6s ease, color .6s ease;
         }
         .info-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,.08); }
         .info-icon {
@@ -405,6 +410,17 @@
         .info-label { font-size: .68rem; color: #6b7280; }
 
         /* ── RSVP ── */
+        #rsvp-section {
+            transition: opacity .4s ease, max-height .4s ease;
+            opacity: 1;
+            max-height: 2000px;
+            overflow: hidden;
+        }
+        #rsvp-section.hidden {
+            opacity: 0;
+            max-height: 0;
+            pointer-events: none;
+        }
         .rsvp-wrap {
             background: linear-gradient(135deg, rgba(135,206,235,.1) 0%, rgba(179,157,219,.12) 100%);
             border: 1px solid rgba(135,206,235,.25);
@@ -412,6 +428,7 @@
             padding: 1.5rem;
             position: relative;
             overflow: hidden;
+            transition: background .6s ease, border-color .6s ease;
         }
         .rsvp-wrap::after {
             content: '\f13d'; /* fa-anchor */
@@ -477,6 +494,10 @@
             border-color: var(--gold);
             box-shadow: 0 0 0 4px rgba(212,175,55,.2), 0 2px 8px rgba(0,0,0,.06);
         }
+        .rsvp-input:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
         .rsvp-input.error { border-color: #f87171; box-shadow: 0 0 0 4px rgba(248,113,113,.18); }
         .rsvp-input::placeholder { color: #9ca3af; }
 
@@ -530,6 +551,10 @@
             position: relative; z-index: 1;
         }
         .btn-confirm:active { transform: scale(.97); }
+        .btn-confirm:focus-visible {
+            outline: 3px solid var(--gold);
+            outline-offset: 3px;
+        }
         .btn-confirm.yes {
             background: linear-gradient(135deg, #22c55e, #16a34a);
             color: #fff;
@@ -564,13 +589,22 @@
         .lock-note i { color: var(--gold); }
 
         /* ── Resultado ── */
-        #result-section { display: none; }
+        #result-section {
+            display: none;
+            opacity: 0;
+            transition: opacity .5s ease;
+        }
+        #result-section.visible {
+            display: block;
+            opacity: 1;
+        }
         .result-icon-ring {
             width: 68px; height: 68px;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto .85rem;
             border: 2px solid;
+            transition: background .6s ease, border-color .6s ease;
         }
         .result-icon-ring.green { background: #f0fdf4; border-color: #bbf7d0; }
         .result-icon-ring.gray  { background: #f9fafb; border-color: #e5e7eb; }
@@ -599,6 +633,7 @@
             border-radius: 1.25rem;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,.08);
+            transition: background .6s ease, border-color .6s ease, box-shadow .6s ease;
         }
         .address-top { height: 3px; background: linear-gradient(to right, var(--gold), var(--gold-light), var(--gold)); }
         .address-body { padding: 1.1rem 1.25rem; }
@@ -654,6 +689,7 @@
             border: 2px solid rgba(212,175,55,.3);
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto .85rem;
+            transition: background .6s ease, border-color .6s ease;
         }
         .ty-icon i { color: var(--gold); font-size: 1.4rem; }
         .ty-title {
@@ -984,6 +1020,18 @@
             .cover-title { font-size: 3rem; }
             #open-btn { font-size: .7rem; padding: .8rem 1.75rem; }
         }
+
+        /* ════════════════════════════════════════════
+           ACESSIBILIDADE — reduzir animações
+           ════════════════════════════════════════════ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+            }
+            html { scroll-behavior: auto; }
+        }
     </style>
 </head>
 <body>
@@ -994,10 +1042,10 @@
     <div id="video-bg-layer">
         <div id="blue-bg"></div>
         <!-- SEM autoplay — vídeo aparece pausado no primeiro frame -->
-        <video id="cover-video-backdrop" playsinline preload="auto" muted>
+        <video id="cover-video-backdrop" playsinline preload="metadata" muted>
             <source src="Video inicial.mp4" type="video/mp4">
         </video>
-        <video id="cover-video" playsinline preload="auto" muted>
+        <video id="cover-video" playsinline preload="metadata" muted>
             <source src="Video inicial.mp4" type="video/mp4">
         </video>
         <div id="video-overlay"></div>
@@ -1006,7 +1054,7 @@
     <!-- ══════════════════════════════════════
          MÚSICA
          ══════════════════════════════════════ -->
-    <audio id="bg-music" loop preload="auto">
+    <audio id="bg-music" loop preload="none">
         <source src="arca de noer (online-audio-converter.com).mp3" type="audio/mpeg">
     </audio>
 
@@ -1029,7 +1077,7 @@
             </div>
             <div class="bd-verse">
                 <i class="fa-solid fa-dove"></i>
-                Heranca do Senhor sao os filhos — Sl 127:3
+                Herança do Senhor são os filhos — Sl 127:3
             </div>
         </div>
     </div>
@@ -1038,19 +1086,26 @@
          TELA DE CAPA — sem container,
          título e botão flutuam direto sobre o vídeo
          ══════════════════════════════════════ -->
-    <div id="cover-screen">
-        <p class="cover-label">
+    <div id="cover-screen" role="dialog" aria-label="Convite de aniversário da Noemí">
+        <p class="cover-label" aria-hidden="true">
             <i class="fa-solid fa-dove" style="color:var(--gold);margin-right:6px;"></i>
             Um momento abençoado
         </p>
 
-        <div class="cover-divider">
+        <h1 class="cover-title">Noemí</h1>
+
+        <div class="cover-divider" aria-hidden="true">
             <span></span>
             <i class="fa-solid fa-star"></i>
             <span></span>
         </div>
 
-        <p class="cover-hint">
+        <button id="open-btn" aria-label="Abrir convite">
+            <i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i>
+            Abrir Convite
+        </button>
+
+        <p class="cover-hint" aria-hidden="true">
             <i class="fa-solid fa-hand-pointer"></i>
             Toque em qualquer lugar para abrir
         </p>
@@ -1129,26 +1184,31 @@
                         <i class="fa-solid fa-paw"></i>Confirme sua presença
                     </h3>
                     <p class="rsvp-sub">Para prepararmos tudo com muito amor, nos avise se poderá comparecer.</p>
-                    <p class="rsvp-hint">
+                    <p class="rsvp-hint" id="rsvp-hint-text">
                         <i class="fa-solid fa-circle-info"></i>
                         Digite um nome ou separe por <strong>vírgula</strong> para confirmar mais de uma pessoa.
                     </p>
 
                     <div class="input-wrap">
-                        <i class="fa-solid fa-users icon-left"></i>
+                        <label for="guest-name" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">Nome do convidado</label>
+                        <i class="fa-solid fa-users icon-left" aria-hidden="true"></i>
                         <input id="guest-name" type="text" class="rsvp-input"
-                               placeholder="Ex: Yuri, Noemi ou Maria da Penha"
-                               autocomplete="off">
+                               placeholder="Digite seu nome..."
+                               autocomplete="off"
+                               list="guest-suggestions"
+                               aria-label="Digite o nome do convidado"
+                               aria-describedby="rsvp-hint-text rsvp-error-msg">
+                        <datalist id="guest-suggestions"></datalist>
                     </div>
 
-                    <div id="name-preview"></div>
-                    <div id="rsvp-error-msg"></div>
+                    <div id="name-preview" role="status" aria-live="polite"></div>
+                    <div id="rsvp-error-msg" role="alert"></div>
 
-                    <button class="btn-confirm yes" onclick="confirmRSVP(true)">
+                    <button class="btn-confirm yes" onclick="confirmRSVP(true)" aria-label="Confirmar presença — Com alegria, eu vou!">
                         <i class="fa-solid fa-circle-check"></i>
                         Com alegria, eu vou!
                     </button>
-                    <button class="btn-confirm no" onclick="confirmRSVP(false)">
+                    <button class="btn-confirm no" onclick="confirmRSVP(false)" aria-label="Recusar convite — Com pesar, não poderei ir">
                         <i class="fa-solid fa-circle-xmark"></i>
                         Com pesar, não poderei ir
                     </button>
@@ -1223,7 +1283,7 @@
                     </div>
                 </div>
 
-                <button class="btn-reset" onclick="resetRSVP()">
+                <button class="btn-reset" onclick="resetRSVP()" aria-label="Refazer confirmação">
                     <i class="fa-solid fa-rotate-left"></i> Refazer confirmação
                 </button>
             </div>
@@ -1291,7 +1351,7 @@
     (function () {
 
         const COVER_HIDE_DELAY_MS = 200;
-        const INVITE_REVEAL_DELAY_MS = 7000;
+        const INVITE_REVEAL_DELAY_MS = 3200;
         const MUSIC_START_DELAY_MS = 5000;
 
         /* ── Referências ── */
@@ -1299,6 +1359,7 @@
         const backdropVideo = document.getElementById('cover-video-backdrop');
         const video         = document.getElementById('cover-video');
         const coverScreen   = document.getElementById('cover-screen');
+        const openBtn       = document.getElementById('open-btn');
         const mainInvite    = document.getElementById('main-invite');
         const inviteCard    = document.querySelector('.invite-card');
         const btnMusic      = document.getElementById('btn-music');
@@ -1318,15 +1379,19 @@
         const resMsg        = document.getElementById('res-msg');
         const resNames      = document.getElementById('res-names');
         const guestInput    = document.getElementById('guest-name');
+        const guestSuggestions = document.getElementById('guest-suggestions');
         const namePreview   = document.getElementById('name-preview');
         const rsvpError     = document.getElementById('rsvp-error-msg');
         const thankYou      = document.getElementById('thank-you-section');
         const particles     = document.getElementById('particles');
+        const lockNote      = document.querySelector('.lock-note');
 
         let musicPlaying = false;
         let muted        = false;
         let opened       = false;
         let guestList    = [];
+        let guestListReady = false;
+        let guestListPromise = null;
 
         /* ─── Lista de convidados ─── */
         async function loadGuests() {
@@ -1335,9 +1400,36 @@
                 if (!r.ok) throw 0;
                 const t = await r.text();
                 guestList = t.split('\n').map(norm).filter(Boolean);
-            } catch { guestList = []; }
+                guestListReady = true;
+                populateDatalist();
+            } catch {
+                guestList = [];
+                guestListReady = true;
+            }
         }
-        loadGuests();
+        guestListPromise = loadGuests();
+
+        function populateDatalist() {
+            if (!guestSuggestions) return;
+            guestSuggestions.innerHTML = '';
+            /* Usar os nomes originais do convidados.txt como sugestões */
+            const seen = new Set();
+            /* Precisamos dos nomes originais, não normalizados. Recarregar do fetch. */
+            fetch('convidados.txt')
+                .then(r => r.text())
+                .then(t => {
+                    const originalNames = t.split('\n').map(s => s.trim()).filter(Boolean);
+                    originalNames.forEach(name => {
+                        if (!seen.has(name.toLowerCase())) {
+                            seen.add(name.toLowerCase());
+                            const opt = document.createElement('option');
+                            opt.value = name;
+                            guestSuggestions.appendChild(opt);
+                        }
+                    });
+                })
+                .catch(() => {});
+        }
 
         function norm(s) {
             return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
@@ -1357,6 +1449,7 @@
         }
 
         function activateGifBackground() {
+            blueBg.classList.add('fade');
             blueBg.classList.add('show');
             video.pause();
             if (backdropVideo) backdropVideo.pause();
@@ -1379,15 +1472,19 @@
             }
             video.play().catch(() => {});
 
+            /* Ativar GIF background quando o video terminar naturalmente (~7.9s) */
+            video.addEventListener('ended', function() {
+                activateGifBackground();
+            }, { once: true });
+
             /* Oculta a capa */
             coverScreen.classList.add('out');
             setTimeout(() => {
                 coverScreen.style.display = 'none';
             }, COVER_HIDE_DELAY_MS);
 
-            /* Exibe o convite apos 7 segundos e troca para o gif */
+            /* Exibe o convite aos 3.2s (sincronizado com a abertura da carta no video) */
             setTimeout(() => {
-                activateGifBackground();
                 mainInvite.classList.add('show');
                 requestAnimationFrame(() => requestAnimationFrame(() => {
                     mainInvite.classList.add('visible');
@@ -1417,8 +1514,23 @@
 
         }
 
-        /* Clique em qualquer lugar da capa */
+        /* Clique/toque na capa e no botão */
         coverScreen.addEventListener('click', openInvite);
+        if (openBtn) {
+            openBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openInvite();
+            });
+        }
+        /* Tecla Enter no cover screen para acessibilidade */
+        coverScreen.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openInvite();
+            }
+        });
+        /* Tornar cover screen focável para teclado */
+        coverScreen.setAttribute('tabindex', '0');
 
         /* ─── Scroll reveal ─── */
         function handleReveal() {
@@ -1436,10 +1548,10 @@
             if (names.length && this.value.trim()) {
                 namePreview.classList.add('show');
                 names.forEach(n => {
-                    const ok = !guestList.length || inList(n);
+                    const ok = !guestListReady || !guestList.length || inList(n);
                     const s = document.createElement('span');
                     s.className = 'chip ' + (ok ? 'ok' : 'bad');
-                    s.innerHTML = `<i class="fa-solid fa-${ok?'user':'circle-xmark'}" style="font-size:.6rem;"></i> ${n}`;
+                    s.innerHTML = '<i class="fa-solid fa-' + (ok ? 'user' : 'circle-xmark') + '" style="font-size:.6rem;" aria-hidden="true"></i> ' + n;
                     namePreview.appendChild(s);
                 });
                 const c = document.createElement('span');
@@ -1453,9 +1565,11 @@
 
         /* ─── Controles de música ─── */
         function syncMusicIcon() {
+            if (!iconMusic) return;
             iconMusic.className = musicPlaying ? 'fa-solid fa-music' : 'fa-solid fa-pause';
         }
         function syncMuteIcon() {
+            if (!iconMute) return;
             iconMute.className = muted
                 ? 'fa-solid fa-volume-xmark'
                 : 'fa-solid fa-volume-high';
@@ -1511,12 +1625,13 @@
 
         /* ─── Partículas ─── */
         function spawnParticles(n) {
-            const icons  = ['fa-heart','fa-star','fa-dove','fa-feather','fa-paw'];
+            const icons  = ['heart','star','dove','feather','paw'];
             const colors = ['#FF6B6B','#FFD43B','#69DB7C','#4DABF7','#B197FC','#F4A7B9','#FFA94D'];
             for (let i = 0; i < n; i++) {
                 setTimeout(() => {
                     const el = document.createElement('i');
                     el.className = 'fa-solid fa-' + icons[Math.floor(Math.random()*icons.length)] + ' rise-p';
+                    el.setAttribute('aria-hidden', 'true');
                     el.style.left   = (Math.random()*90) + '%';
                     el.style.fontSize = (Math.random()*1.2+.7) + 'rem';
                     el.style.color  = colors[Math.floor(Math.random()*colors.length)];
@@ -1528,13 +1643,15 @@
         }
 
         /* ─── Confete ─── */
+        let confettiInterval = null;
         function fireConfetti() {
+            if (confettiInterval) clearInterval(confettiInterval);
             const end  = Date.now() + 5000;
             const cols = ['#87CEEB','#D4AF37','#6B4423','#4A90E2','#fff','#FFB6C1','#FFD700','#98FB98'];
             const def  = { startVelocity:30, spread:360, ticks:60, zIndex:200 };
-            const iv = setInterval(() => {
+            confettiInterval = setInterval(() => {
                 const left = end - Date.now();
-                if (left <= 0) return clearInterval(iv);
+                if (left <= 0) { clearInterval(confettiInterval); confettiInterval = null; return; }
                 const n = 50 * (left/5000);
                 confetti(Object.assign({},def,{ particleCount:n,colors:cols,origin:{ x:Math.random()*.2+.1, y:Math.random()-.2 } }));
                 confetti(Object.assign({},def,{ particleCount:n,colors:cols,origin:{ x:Math.random()*.2+.7, y:Math.random()-.2 } }));
@@ -1542,7 +1659,7 @@
         }
 
         /* ─── Confirmar presença ─── */
-        window.confirmRSVP = function (isGoing) {
+        window.confirmRSVP = async function (isGoing) {
             const raw = guestInput.value.trim();
             rsvpError.classList.remove('show');
 
@@ -1552,7 +1669,7 @@
                 guestInput.focus();
                 setTimeout(() => {
                     guestInput.classList.remove('error');
-                    guestInput.placeholder = 'Ex: Yuri, Noemi ou Maria da Penha';
+                    guestInput.placeholder = 'Digite seu nome...';
                 }, 3500);
                 return;
             }
@@ -1560,19 +1677,50 @@
             const names = parseNames(raw);
             if (!names.length) return;
 
-            const notFound = guestList.length ? names.filter(n => !inList(n)) : [];
-            if (notFound.length && guestList.length) {
-                rsvpError.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#b91c1c;margin-right:.4rem;"></i>'
-                    + notFound.map(n=>'<strong>'+n+'</strong>').join(', ')
-                    + ' não está cadastrado na lista de convidados.';
+            /* Aguarda a lista de convidados carregar antes de validar */
+            if (!guestListReady) {
+                rsvpError.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="color:var(--darkblue);margin-right:.4rem;"></i>Carregando lista de convidados, aguarde...';
                 rsvpError.classList.add('show');
-                guestInput.classList.add('error');
-                setTimeout(() => guestInput.classList.remove('error'), 3000);
+                try { await guestListPromise; } catch {}
+                rsvpError.classList.remove('show');
+                if (!guestListReady) {
+                    rsvpError.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#b91c1c;margin-right:.4rem;"></i>Não foi possível carregar a lista de convidados. Tente novamente.';
+                    rsvpError.classList.add('show');
+                    return;
+                }
+            }
+
+            /* Valida se os nomes estão na lista */
+            if (guestList.length > 0) {
+                const notFound = names.filter(n => !inList(n));
+                if (notFound.length) {
+                    rsvpError.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#b91c1c;margin-right:.4rem;"></i>'
+                        + notFound.map(n=>'<strong>'+n+'</strong>').join(', ')
+                        + ' não está cadastrado na lista de convidados.';
+                    rsvpError.classList.add('show');
+                    guestInput.classList.add('error');
+                    setTimeout(() => guestInput.classList.remove('error'), 3000);
+                    return;
+                }
+            } else {
+                /* Lista vazia apos carregar = arquivo convidados.txt nao encontrado ou vazio */
+                rsvpError.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color:#b91c1c;margin-right:.4rem;"></i>'
+                    + 'Lista de convidados indisponível. Recarregue a página ou entre em contato com o organizador.';
+                rsvpError.classList.add('show');
                 return;
             }
 
-            rsvpSection.style.display = 'none';
-            resultSection.style.display = 'block';
+            /* Transição: fade-out do RSVP */
+            rsvpSection.classList.add('hidden');
+            setTimeout(() => {
+                rsvpSection.style.display = 'none';
+
+                /* Mostra resultado com fade-in */
+                resultSection.style.display = 'block';
+                void resultSection.offsetWidth;
+                resultSection.classList.add('visible');
+            }, 400);
+
             resNames.innerHTML = '';
             thankYou.style.display = 'none';
             thankYou.style.opacity = '0';
@@ -1582,7 +1730,7 @@
                 resIcon.className = 'fa-solid fa-heart';
                 resIcon.style.cssText = 'font-size:1.7rem;color:#16a34a;';
                 resRing.className = 'result-icon-ring green';
-                resTitle.textContent = 'Gracas a Deus!';
+                resTitle.textContent = 'Graças a Deus!';
                 resTitle.className = 'result-title green';
 
                 const nh = names.map(n=>'<strong style="color:var(--brown);">'+n+'</strong>').join(', ');
@@ -1598,7 +1746,7 @@
                 if (pl) {
                     resNames.innerHTML = names.map(n=>
                         '<span style="display:inline-flex;align-items:center;gap:.3rem;background:#dcfce7;color:#15803d;border:1px solid #bbf7d0;border-radius:999px;padding:.3rem .7rem;font-size:.7rem;font-weight:600;margin:.2rem;">'
-                        +'<i class="fa-solid fa-circle-check" style="font-size:.6rem;"></i>'+n+'</span>'
+                        +'<i class="fa-solid fa-circle-check" style="font-size:.6rem;" aria-hidden="true"></i>'+n+'</span>'
                     ).join('');
                 }
 
@@ -1618,10 +1766,11 @@
                 const pl = names.length > 1;
                 resMsg.innerHTML = nh+', sentiremos muito '
                     +(pl?'suas faltas':'sua falta')
-                    +' neste dia tao especial. Agradecemos pela cordialidade em nos avisar. Que o Senhor abencoe '
-                    +(pl?'voces':'voce')+' grandemente! '
+                    +' neste dia tão especial. Agradecemos pela cordialidade em nos avisar. Que o Senhor abençoe '
+                    +(pl?'vocês':'você')+' grandemente! '
                     +'<i class="fa-solid fa-hands-praying" style="color:var(--gold);margin-left:4px;"></i>';
 
+                /* Segurança: NUNCA mostrar endereço para quem não vai */
                 addressBox.style.display = 'none';
             }
 
@@ -1634,7 +1783,8 @@
 
         window.resetRSVP = function () {
             guestInput.value = '';
-            resultSection.style.display = 'none';
+            resultSection.classList.remove('visible');
+            resultSection.style.display = '';
             resRing.className = 'result-icon-ring green';
             rsvpError.classList.remove('show');
             namePreview.classList.remove('show');
@@ -1643,6 +1793,9 @@
             thankYou.style.display = 'none';
             thankYou.style.opacity = '0';
             rsvpSection.style.display = 'block';
+            void rsvpSection.offsetWidth;
+            rsvpSection.classList.remove('hidden');
+            guestInput.focus();
         };
 
     })();
