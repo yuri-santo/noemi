@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Convite: 1 Aninho da Noemí — Arca de Noé</title>
+    <title>Convite: 1 Aninho da Noemi — Arca de Noé</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600;700&family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -275,11 +275,11 @@
         /* ── Foto frame ── */
         .photo-frame {
             position: relative;
-            width: clamp(130px, 35vw, 155px);
-            height: clamp(130px, 35vw, 155px);
-            margin: 0 auto 1.1rem;
+            width: clamp(160px, 45vw, 210px);
+            height: clamp(160px, 45vw, 210px);
+            margin: 0 auto 1.25rem;
             border-radius: 50%;
-            padding: 7px;
+            padding: 8px;
             background: #fff;
             box-shadow: 0 10px 35px rgba(107,68,35,.22);
         }
@@ -325,9 +325,11 @@
             background-clip: text;
             color: transparent;
             animation: goldShift 4s linear infinite;
-            line-height: 1.1;
+            line-height: 1.5;
+            padding: 0.2em 0;
             text-align: center;
-            margin-bottom: 1.25rem;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
         }
         @keyframes goldShift {
             0%,100% { background-position: 0% center; }
@@ -1065,11 +1067,11 @@
         <div id="bd-img-wrap">
             <div class="ring ring-1"></div>
             <div class="ring ring-2"></div>
-            <img id="bd-img" src="aniversariante.png" alt="Noemí — 1 Aninho"
+            <img id="bd-img" src="aniversariante.png" alt="Noemi — 1 Aninho"
                  onerror="this.style.display='none'">
         </div>
         <div id="bd-text">
-            <div class="bd-name">Noemí</div>
+            <div class="bd-name">Noemi</div>
             <div class="bd-sub">
                 <i class="fa-solid fa-star" style="color:var(--gold);font-size:.7em;margin-right:5px;"></i>
                 Primeiro Aninho
@@ -1086,13 +1088,13 @@
          TELA DE CAPA — sem container,
          título e botão flutuam direto sobre o vídeo
          ══════════════════════════════════════ -->
-    <div id="cover-screen" role="dialog" aria-label="Convite de aniversário da Noemí">
+    <div id="cover-screen" role="dialog" aria-label="Convite de aniversário da Noemi">
         <p class="cover-label" aria-hidden="true">
             <i class="fa-solid fa-dove" style="color:var(--gold);margin-right:6px;"></i>
             Um momento abençoado
         </p>
 
-        <h1 class="cover-title">Noemí</h1>
+        <h1 class="cover-title">Noemi</h1>
 
         <div class="cover-divider" aria-hidden="true">
             <span></span>
@@ -1124,27 +1126,29 @@
             <!-- ══ Foto + Nome ══ -->
             <div class="section reveal" style="text-align:center; padding-top:2rem;">
                 <div class="photo-frame">
-                    <img src="noemi.jpeg" alt="Foto da Noemí"
+                    <img src="noemi.jpeg" alt="Foto da Noemi"
                          onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,rgba(244,167,185,.3),rgba(135,206,235,.3));display:flex;align-items:center;justify-content:center;border:3px solid #fff;\'><i class=\'fa-solid fa-heart\' style=\'font-size:2.5rem;color:var(--pink);\'></i></div>'">
                 </div>
 
                 <p class="section-overline">
                     <i class="fa-solid fa-star"></i> Primeiro Aninho <i class="fa-solid fa-star"></i>
                 </p>
-                <h2 class="invite-name">Noemí</h2>
+                <h2 class="invite-name">Noemi</h2>
             </div>
 
             <div class="gold-divider"><span></span><i class="fa-solid fa-dove"></i><span></span></div>
 
             <!-- ══ Texto ══ -->
-            <div class="section reveal" style="position:relative;">
-                <i class="fa-solid fa-quote-left" style="position:absolute;top:0;left:1.5rem;font-size:1.8rem;color:rgba(135,206,235,.25);"></i>
-                <i class="fa-solid fa-quote-right" style="position:absolute;bottom:0;right:1.5rem;font-size:1.8rem;color:rgba(135,206,235,.25);"></i>
+            <div class="section reveal">
+                <div style="position:relative; padding: 0 1.25rem; margin-bottom: 1.25rem;">
+                    <i class="fa-solid fa-quote-left" style="position:absolute;top:-0.5rem;left:-0.2rem;font-size:1.5rem;color:rgba(135,206,235,.4);"></i>
+                    <i class="fa-solid fa-quote-right" style="position:absolute;bottom:-0.5rem;right:-0.2rem;font-size:1.5rem;color:rgba(135,206,235,.4);"></i>
+                    <p class="invite-body" style="margin-bottom:0; position:relative; z-index:1;">
+                        Com o coração transbordando de gratidão ao Senhor, convidamos você e sua família
+                        para celebrar o <strong>primeiro aninho</strong> da nossa preciosa Noemi.
+                    </p>
+                </div>
 
-                <p class="invite-body">
-                    Com o coração transbordando de gratidão ao Senhor, convidamos você e sua família
-                    para celebrar o <strong>primeiro aninho</strong> da nossa preciosa Noemí.
-                </p>
                 <p class="invite-body">
                     <i class="fa-solid fa-dove"></i>
                     A arca está pronta e os animais já estão subindo — só falta
@@ -1251,6 +1255,37 @@
                                target="_blank" rel="noopener noreferrer" class="btn-map waze">
                                 <i class="fa-brands fa-waze"></i> Abrir no Waze
                             </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sugestão de Presentes -->
+                <div id="gift-box" style="display:none; margin-top: 1.25rem;">
+                    <div class="address-card">
+                        <div class="address-top" style="background: linear-gradient(to right, #F4A7B9, #FFD700, #87CEEB);"></div>
+                        <div class="address-body">
+                            <p class="address-title">
+                                <i class="fa-solid fa-gift" style="color: var(--gold);"></i>
+                                Sugestão de Presentes
+                            </p>
+                            <p class="address-text" style="font-size: 0.75rem; text-align: center; margin-bottom: 1rem;">
+                                Sua presença é nosso maior presente! Mas caso queira mimar a Noemí, aqui estão os tamanhos:
+                            </p>
+                            
+                            <div style="display: grid; gap: 0.5rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
+                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-shirt" style="color: #87CEEB; width: 20px;"></i> Roupinha</span>
+                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Tam. 2 (anos)</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
+                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-shoe-prints" style="color: #F4A7B9; width: 20px;"></i> Calçado</span>
+                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Número 20</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
+                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-baby" style="color: #B39DDB; width: 20px;"></i> Fralda</span>
+                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Tam. G ou XG</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1737,7 +1772,7 @@
                 const pl = names.length > 1;
                 resMsg.innerHTML = 'Que alegria, '+nh+'! '
                     +(pl?'Suas presenças foram confirmadas':'Sua presença foi confirmada')
-                    +'. A Noemí e toda a família '
+                    +'. A Noemi e toda a família '
                     +(pl?'ficarão':'ficará')+' muito '
                     +(pl?'felizes':'feliz')+' com '
                     +(pl?'vocês':'você')+' na nossa Arca. Deus abençoe! '
@@ -1751,6 +1786,8 @@
                 }
 
                 addressBox.style.display = 'block';
+                const giftBox = document.getElementById('gift-box');
+                if (giftBox) giftBox.style.display = 'block';
                 fireConfetti();
                 spawnParticles(12);
                 setTimeout(showBirthdayOverlay, 1500);
@@ -1772,6 +1809,8 @@
 
                 /* Segurança: NUNCA mostrar endereço para quem não vai */
                 addressBox.style.display = 'none';
+                const giftBox = document.getElementById('gift-box');
+                if (giftBox) giftBox.style.display = 'none';
             }
 
             try {
@@ -1792,6 +1831,8 @@
             resNames.innerHTML = '';
             thankYou.style.display = 'none';
             thankYou.style.opacity = '0';
+            const giftBox = document.getElementById('gift-box');
+            if (giftBox) giftBox.style.display = 'none';
             rsvpSection.style.display = 'block';
             void rsvpSection.offsetWidth;
             rsvpSection.classList.remove('hidden');
