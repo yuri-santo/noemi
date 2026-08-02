@@ -1352,15 +1352,15 @@
         const SUPABASE_URL = "https://izphobguvtfjqzrsbkva.supabase.co"; // URL do seu projeto Supabase
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6cGhvYmd1dnRmanF6cnNia3ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU2OTYzMjEsImV4cCI6MjEwMTI3MjMyMX0.EyLTpW7y1-UV4qllmw6Nh0mjN0r2wLQzxbmp99iHGOg"; // Chave pública fornecida
         
-        let supabase = null;
+        let supabaseClient = null;
         if (SUPABASE_URL !== "SUA_URL_AQUI") {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             loadGiftsFromSupabase();
         }
 
         async function loadGiftsFromSupabase() {
-            if (!supabase) return;
-            const { data, error } = await supabase.from('gift_suggestions').select('*').order('created_at', { ascending: true });
+            if (!supabaseClient) return;
+            const { data, error } = await supabaseClient.from('gift_suggestions').select('*').order('created_at', { ascending: true });
             if (!error && data && data.length > 0) {
                 const container = document.getElementById('gift-list-container');
                 if (!container) return;
@@ -1394,8 +1394,8 @@
             localStorage.setItem('arca_noemi_rsvps', JSON.stringify(stored));
 
             // Tenta salvar no Supabase também
-            if (supabase) {
-                supabase.from('guests').insert([{
+            if (supabaseClient) {
+                supabaseClient.from('guests').insert([{
                     guest_names: rsvpData.guest_names,
                     headcount: rsvpData.headcount,
                     is_going: rsvpData.is_going
@@ -1452,8 +1452,8 @@
         /* ─── Lista de convidados ─── */
         async function loadGuests() {
             try {
-                if (!supabase) throw new Error("Supabase não inicializado");
-                const { data, error } = await supabase.from('allowed_guests').select('name');
+                if (!supabaseClient) throw new Error("Supabase não inicializado");
+                const { data, error } = await supabaseClient.from('allowed_guests').select('name');
                 if (error) throw error;
                 
                 const originalNames = data.map(d => d.name.trim()).filter(Boolean);
