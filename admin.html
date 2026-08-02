@@ -256,9 +256,9 @@
         const SUPABASE_URL = "https://izphobguvtfjqzrsbkva.supabase.co"; // URL do seu projeto Supabase
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6cGhvYmd1dnRmanF6cnNia3ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU2OTYzMjEsImV4cCI6MjEwMTI3MjMyMX0.EyLTpW7y1-UV4qllmw6Nh0mjN0r2wLQzxbmp99iHGOg"; // Chave pública fornecida
         
-        let supabase = null;
+        let supabaseClient = null;
         if (SUPABASE_URL !== "SUA_URL_AQUI") {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         }
 
         // LÓGICA DE AUTENTICAÇÃO
@@ -317,8 +317,8 @@
             let loadedRecords = [];
 
             async function loadData() {
-                if (supabase) {
-                    const { data, error } = await supabase.from('guests').select('*').order('created_at', { ascending: false });
+                if (supabaseClient) {
+                    const { data, error } = await supabaseClient.from('guests').select('*').order('created_at', { ascending: false });
                     if (!error && data) {
                         loadedRecords = data.map(row => ({
                             names: row.guest_names.split(',').map(n => n.trim()),
@@ -502,10 +502,10 @@
             const guestsTableBody = document.getElementById('guests-table-body');
             
             async function renderGuests() {
-                if (!supabase) return;
+                if (!supabaseClient) return;
                 guestsTableBody.innerHTML = '<tr><td colspan="2" class="py-8 text-center text-gray-400"><i class="fa-solid fa-spinner fa-spin text-2xl"></i></td></tr>';
                 
-                const { data, error } = await supabase.from('allowed_guests').select('*').order('name', { ascending: true });
+                const { data, error } = await supabaseClient.from('allowed_guests').select('*').order('name', { ascending: true });
                 if (error || !data || data.length === 0) {
                     guestsTableBody.innerHTML = '<tr><td colspan="2" class="py-8 text-center text-gray-400 font-semibold">Nenhum convidado na lista.</td></tr>';
                     return;
@@ -531,7 +531,7 @@
                 if (!name) return;
 
                 input.disabled = true;
-                const { error } = await supabase.from('allowed_guests').insert([{ name }]);
+                const { error } = await supabaseClient.from('allowed_guests').insert([{ name }]);
                 input.disabled = false;
                 
                 if (!error) {
@@ -544,7 +544,7 @@
 
             window.deleteGuest = async function(id) {
                 if (confirm('Tem certeza que deseja remover este nome da lista permitida?')) {
-                    await supabase.from('allowed_guests').delete().eq('id', id);
+                    await supabaseClient.from('allowed_guests').delete().eq('id', id);
                     renderGuests();
                 }
             };
