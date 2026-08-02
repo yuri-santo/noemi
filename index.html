@@ -1391,9 +1391,14 @@
                 }
                 if (data.location_address) {
                     document.getElementById('display-address').innerHTML = '<strong><i class="fa-solid fa-house"></i> ' + data.location_address.replace(/\\n/g, '<br>') + '</strong>';
-                    const encoded = encodeURIComponent(data.location_address);
-                    document.getElementById('btn-map-google').href = 'https://www.google.com/maps/search/?api=1&query=' + encoded;
-                    document.getElementById('btn-map-waze').href = 'https://www.waze.com/ul?q=' + encoded;
+                    if (data.location_url) {
+                        document.getElementById('btn-map-google').href = data.location_url;
+                        document.getElementById('btn-map-waze').href = data.location_url;
+                    } else {
+                        const encoded = encodeURIComponent(data.location_address);
+                        document.getElementById('btn-map-google').href = 'https://www.google.com/maps/search/?api=1&query=' + encoded;
+                        document.getElementById('btn-map-waze').href = 'https://www.waze.com/ul?q=' + encoded;
+                    }
                 }
             }
         }
