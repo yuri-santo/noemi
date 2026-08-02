@@ -262,7 +262,7 @@
         }
 
         // LÓGICA DE AUTENTICAÇÃO
-        function checkAuth() {
+        window.checkAuth = function() {
             const pwd = document.getElementById('auth-pwd').value;
             if (pwd === 'Familia@vidal.36') {
                 document.getElementById('auth-overlay').style.display = 'none';
