@@ -268,6 +268,10 @@
                         <label class="block text-sm font-bold text-gray-700 mb-1">Link do Mapa (Waze ou Google Maps)</label>
                         <input type="url" id="input-event-location-url" class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="https://waze.com/... ou https://maps.app.goo.gl/...">
                     </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="input-event-show-location" class="w-5 h-5 text-blue-500 rounded focus:ring-blue-400 border-gray-300" checked>
+                        <label for="input-event-show-location" class="ml-2 block text-sm font-bold text-gray-700">Exibir Local no Convite (Se desmarcado, exibirá "Local a definir")</label>
+                    </div>
                     <button onclick="saveEventDetails()" class="w-full py-2 bg-blue-500 text-white rounded-xl font-bold hover:bg-blue-600 transition-colors shadow-md">
                         <i class="fa-solid fa-save mr-2"></i> Salvar Detalhes
                     </button>
@@ -635,6 +639,9 @@
                     if (data.location_url) {
                         document.getElementById('input-event-location-url').value = data.location_url;
                     }
+                    if (data.show_location !== undefined && data.show_location !== null) {
+                        document.getElementById('input-event-show-location').checked = data.show_location;
+                    }
                 }
             }
 
@@ -653,7 +660,8 @@
                 const payload = {
                     event_date: isoDate,
                     location_address: locVal,
-                    location_url: document.getElementById('input-event-location-url').value
+                    location_url: document.getElementById('input-event-location-url').value,
+                    show_location: document.getElementById('input-event-show-location').checked
                 };
 
                 if (existing) {

@@ -1280,9 +1280,14 @@
                 </div>
 
 
-                <button class="btn-reset" onclick="resetRSVP()" aria-label="Refazer confirmação">
-                    <i class="fa-solid fa-rotate-left"></i> Refazer confirmação
-                </button>
+                <div style="display:flex; flex-direction:column; gap:0.5rem; align-items:center; margin-top:1.5rem;">
+                    <button id="btn-reset-rsvp" class="btn-reset" onclick="resetRSVP()" aria-label="Refazer confirmação">
+                        <i class="fa-solid fa-rotate-left"></i> Refazer confirmação
+                    </button>
+                    <button id="btn-cancel-rsvp" class="btn-reset" onclick="cancelRSVP()" aria-label="Cancelar presença" style="display:none; color: #b91c1c; border-color: #fecaca; background: #fef2f2;">
+                        <i class="fa-solid fa-xmark"></i> Cancelar presença / Alterar resposta
+                    </button>
+                </div>
             </div>
 
             <!-- ══ Cenário animado ══ -->
@@ -1389,8 +1394,14 @@
                     document.getElementById('display-date-month').innerText = d.getDate() + ' de ' + months[d.getMonth()];
                     document.getElementById('display-time').innerText = d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
                 }
-                if (data.location_address) {
+                if (data.show_location === false) {
+                    document.getElementById('display-address').innerHTML = '<strong><i class="fa-solid fa-house"></i> Local a definir</strong><br>Aguarde mais informações';
+                    document.getElementById('btn-map-google').style.display = 'none';
+                    document.getElementById('btn-map-waze').style.display = 'none';
+                } else if (data.location_address) {
                     document.getElementById('display-address').innerHTML = '<strong><i class="fa-solid fa-house"></i> ' + data.location_address.replace(/\\n/g, '<br>') + '</strong>';
+                    document.getElementById('btn-map-google').style.display = 'inline-flex';
+                    document.getElementById('btn-map-waze').style.display = 'inline-flex';
                     if (data.location_url) {
                         document.getElementById('btn-map-google').href = data.location_url;
                         document.getElementById('btn-map-waze').href = data.location_url;
@@ -1478,7 +1489,8 @@
         let musicPlaying = false;
         let muted        = false;
         let opened       = false;
-        let guestList    = [];
+        // Controle de Confirmação
+        let guestData    = [];
         let guestListReady = false;
         let guestListPromise = null;
 
@@ -1489,26 +1501,30 @@
                 const { data, error } = await supabaseClient.from('allowed_guests').select('name, has_confirmed');
                 if (error) throw error;
                 
-                const originalNames = data.filter(d => !d.has_confirmed).map(d => d.name.trim()).filter(Boolean);
-                guestList = originalNames.map(norm);
+                guestData = data.filter(d => d.name && d.name.trim() !== '').map(d => ({
+                    originalName: d.name.trim(),
+                    normName: norm(d.name.trim()),
+                    has_confirmed: d.has_confirmed
+                }));
+                
                 guestListReady = true;
                 
-                // Popula datalist
+                // Popula datalist apenas com não confirmados
                 if (guestSuggestions) {
                     guestSuggestions.innerHTML = '';
                     const seen = new Set();
-                    originalNames.forEach(name => {
-                        if (!seen.has(name.toLowerCase())) {
-                            seen.add(name.toLowerCase());
+                    guestData.filter(d => !d.has_confirmed).forEach(d => {
+                        if (!seen.has(d.originalName.toLowerCase())) {
+                            seen.add(d.originalName.toLowerCase());
                             const opt = document.createElement('option');
-                            opt.value = name;
+                            opt.value = d.originalName;
                             guestSuggestions.appendChild(opt);
                         }
                     });
                 }
             } catch (err) {
                 console.error("Erro ao carregar convidados do Supabase:", err);
-                guestList = [];
+                guestData = [];
                 guestListReady = true;
             }
         }
@@ -1520,7 +1536,7 @@
         function norm(s) {
             return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
         }
-        function inList(n) { return guestList.some(g => g === norm(n)); }
+        function getGuest(n) { return guestData.find(g => g.normName === norm(n)); }
 
         function parseNames(raw) {
             const parts = raw.trim().split(',').map(s => s.trim()).filter(Boolean);
@@ -1771,8 +1787,8 @@
             }
 
             /* Valida se os nomes estão na lista */
-            if (guestList.length > 0) {
-                const notFound = names.filter(n => !inList(n));
+            if (guestData.length > 0) {
+                const notFound = names.filter(n => !getGuest(n));
                 if (notFound.length) {
                     rsvpError.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#b91c1c;margin-right:.4rem;"></i>'
                         + notFound.map(n=>'<strong>'+n+'</strong>').join(', ')
@@ -1780,6 +1796,14 @@
                     rsvpError.classList.add('show');
                     guestInput.classList.add('error');
                     setTimeout(() => guestInput.classList.remove('error'), 3000);
+                    return;
+                }
+                
+                // Se algum dos convidados já confirmou, passa direto pra tela pós-confirmação
+                const alreadyConfirmed = names.some(n => getGuest(n) && getGuest(n).has_confirmed);
+                if (alreadyConfirmed) {
+                    window.currentConfirmedNames = names;
+                    showPostRsvpState();
                     return;
                 }
             } else {
@@ -1790,10 +1814,22 @@
                 return;
             }
 
+            // Atualizar variáveis globais
+            window.currentConfirmedNames = names;
+            
+            // Salvar no BD
+            saveRSVP(names, isGoing);
+            
+            // Mostra UI
+            showPostRsvpState(isGoing);
+        };
+
+        window.showPostRsvpState = async function(knownIsGoing = null) {
             /* Transição: fade-out do RSVP e texto inicial */
             const introTextSection = document.getElementById('intro-text-section');
             if (introTextSection) introTextSection.classList.add('hidden');
             rsvpSection.classList.add('hidden');
+            
             setTimeout(() => {
                 if (introTextSection) introTextSection.style.display = 'none';
                 rsvpSection.style.display = 'none';
@@ -1804,10 +1840,23 @@
                 resultSection.classList.add('visible');
             }, 400);
 
-            resNames.innerHTML = '';
+            let isGoing = true;
+            if (knownIsGoing !== null) {
+                isGoing = knownIsGoing;
+            } else if (window.currentConfirmedNames) {
+                try {
+                    const { data } = await supabaseClient.from('guests')
+                        .select('is_going')
+                        .eq('guest_names', window.currentConfirmedNames.join(', '))
+                        .limit(1).single();
+                    if (data) isGoing = data.is_going;
+                } catch (e) {
+                    console.warn(e);
+                }
+            }
 
-            // Salvar via nova função modular
-            saveRSVP(names, isGoing);
+            const names = window.currentConfirmedNames || [];
+            resNames.innerHTML = '';
 
             if (isGoing) {
                 activateGifBackground();
@@ -1837,9 +1886,15 @@
                 addressBox.style.display = 'block';
                 const giftBox = document.getElementById('gift-box');
                 if (giftBox) giftBox.style.display = 'block';
-                fireConfetti();
-                spawnParticles(12);
-                setTimeout(showBirthdayOverlay, 1500);
+                
+                if (knownIsGoing !== null) {
+                    fireConfetti();
+                    spawnParticles(12);
+                    setTimeout(showBirthdayOverlay, 1500);
+                }
+                
+                document.getElementById('btn-cancel-rsvp').style.display = 'inline-flex';
+                document.getElementById('btn-reset-rsvp').style.display = 'none';
 
             } else {
                 resIcon.className = 'fa-solid fa-hands-praying';
@@ -1856,18 +1911,40 @@
                     +(pl?'vocês':'você')+' grandemente! '
                     +'<i class="fa-solid fa-hands-praying" style="color:var(--gold);margin-left:4px;"></i>';
 
-                /* Segurança: NUNCA mostrar endereço para quem não vai */
                 addressBox.style.display = 'none';
                 const giftBox = document.getElementById('gift-box');
                 if (giftBox) giftBox.style.display = 'none';
+                
+                document.getElementById('btn-cancel-rsvp').style.display = 'inline-flex';
+                document.getElementById('btn-reset-rsvp').style.display = 'none';
             }
-
-            try {
-                const h = JSON.parse(localStorage.getItem('noemi_confirmations')||'[]');
-                h.push({ names, isGoing, timestamp: new Date().toISOString() });
-                localStorage.setItem('noemi_confirmations', JSON.stringify(h));
-            } catch {}
         };
+
+        window.cancelRSVP = async function() {
+            if (!window.currentConfirmedNames) return;
+            if (!confirm('Deseja realmente cancelar/alterar sua confirmação?')) return;
+            
+            try {
+                const btn = document.getElementById('btn-cancel-rsvp');
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cancelando...';
+                btn.style.pointerEvents = 'none';
+
+                const namesStr = window.currentConfirmedNames.join(', ');
+                await supabaseClient.from('guests').delete().eq('guest_names', namesStr);
+                
+                for (const name of window.currentConfirmedNames) {
+                    await supabaseClient.from('allowed_guests').update({ has_confirmed: false }).ilike('name', name);
+                }
+                
+                alert('Sua confirmação foi cancelada com sucesso. Você já pode responder novamente se desejar!');
+                window.location.reload();
+            } catch (err) {
+                console.error("Erro ao cancelar presença", err);
+                alert('Houve um erro ao cancelar. Tente novamente.');
+                window.location.reload();
+            }
+        };
+
 
         window.resetRSVP = function () {
             guestInput.value = '';
