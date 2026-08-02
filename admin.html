@@ -176,14 +176,28 @@
             </div>
             
             <div class="mt-4 flex justify-between items-center text-xs text-gray-400">
-                <span><i class="fa-solid fa-shield-halved text-ark-gold"></i> Dados armazenados no LocalStorage do seu navegador.</span>
+                <span><i class="fa-solid fa-shield-halved text-ark-gold"></i> Dados armazenados no LocalStorage (em breve no Supabase).</span>
                 <button onclick="clearData()" class="text-red-400 hover:text-red-600 transition-colors font-semibold">Limpar Banco de Dados</button>
             </div>
         </div>
 
     </div>
 
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        /* =================================================================
+           ⚠️ ATENÇÃO: COLOQUE SUAS CHAVES DO SUPABASE AQUI ⚠️
+           ================================================================= */
+        const SUPABASE_URL = "SUA_URL_AQUI"; // Ex: https://izphobguvtfjqzrsbkva.supabase.co
+        const SUPABASE_ANON_KEY = "SUA_CHAVE_AQUI";
+        
+        let supabase = null;
+        if (SUPABASE_URL !== "SUA_URL_AQUI") {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        // Dados baseados no localStorage
         (function() {
             const tableBody   = document.getElementById('table-body');
             const searchInput = document.getElementById('search-input');

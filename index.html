@@ -1381,8 +1381,20 @@
     <!-- ══════════════════════════════════════
          SCRIPTS
          ══════════════════════════════════════ -->
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
     (function () {
+        /* =================================================================
+           ⚠️ ATENÇÃO: COLOQUE SUAS CHAVES DO SUPABASE AQUI ⚠️
+           ================================================================= */
+        const SUPABASE_URL = "SUA_URL_AQUI"; // Ex: https://izphobguvtfjqzrsbkva.supabase.co
+        const SUPABASE_ANON_KEY = "SUA_CHAVE_AQUI";
+        
+        let supabase = null;
+        if (SUPABASE_URL !== "SUA_URL_AQUI") {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
 
         const COVER_HIDE_DELAY_MS = 200;
         const INVITE_REVEAL_DELAY_MS = 3200;
