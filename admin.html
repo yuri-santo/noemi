@@ -367,9 +367,7 @@
         };
 
         // LÓGICA DE DADOS - RSVP
-        window.initApp = function() {
-            // Dados baseados no localStorage
-            (function() {
+        (function() {
             const tableBody   = document.getElementById('table-body');
             const searchInput = document.getElementById('search-input');
             const statTotal   = document.getElementById('stat-total');
@@ -714,7 +712,6 @@
                     renderGifts();
                 }
             };
-        })();
 
             // Expõe pro escopo global o renderGuests pra as tabs
             window.renderGuests = renderGuests;
