@@ -190,7 +190,7 @@
            ⚠️ ATENÇÃO: COLOQUE SUAS CHAVES DO SUPABASE AQUI ⚠️
            ================================================================= */
         const SUPABASE_URL = "https://izphobguvtfjqzrsbkva.supabase.co"; // URL do seu projeto Supabase
-        const SUPABASE_ANON_KEY = "sb_publishable_9YA2FHoVi5ssVFnlu5BxmA_uUeAupwv"; // Chave pública fornecida
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6cGhvYmd1dnRmanF6cnNia3ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU2OTYzMjEsImV4cCI6MjEwMTI3MjMyMX0.EyLTpW7y1-UV4qllmw6Nh0mjN0r2wLQzxbmp99iHGOg"; // Chave pública fornecida
         
         let supabase = null;
         if (SUPABASE_URL !== "SUA_URL_AQUI") {
@@ -209,9 +209,35 @@
             let currentFilter = 'all';
             let searchQuery = '';
 
-            function loadData() {
-                try { return JSON.parse(localStorage.getItem('noemi_confirmations') || '[]'); } 
-                catch (e) { return []; }
+            let loadedRecords = [];
+
+            async function loadData() {
+                if (supabase) {
+                    const { data, error } = await supabase.from('guests').select('*').order('created_at', { ascending: false });
+                    if (!error && data) {
+                        loadedRecords = data.map(row => ({
+                            names: row.guest_names.split(',').map(n => n.trim()),
+                            isGoing: row.is_going,
+                            timestamp: row.created_at,
+                            headcount: row.headcount
+                        }));
+                        return loadedRecords;
+                    }
+                }
+                
+                // Fallback para LocalStorage se Supabase falhar
+                try { 
+                    const stored = JSON.parse(localStorage.getItem('arca_noemi_rsvps') || '[]');
+                    loadedRecords = stored.map(row => ({
+                        names: row.guest_names ? row.guest_names.split(',').map(n => n.trim()) : (row.names || []),
+                        isGoing: row.is_going !== undefined ? row.is_going : row.isGoing,
+                        timestamp: row.created_at || row.date || new Date().toISOString(),
+                        headcount: row.headcount || (row.names ? row.names.length : 1)
+                    }));
+                } catch (e) {
+                    loadedRecords = [];
+                }
+                return loadedRecords;
             }
 
             function formatDate(iso) {
@@ -230,8 +256,8 @@
                 return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
             }
 
-            function render() {
-                const records = loadData();
+            async function render() {
+                const records = await loadData();
 
                 if (records.length === 0) {
                     tableBody.innerHTML = `<tr><td colspan="4" class="py-16 text-center">
@@ -248,11 +274,11 @@
                 const goingRecords = records.filter(r => r.isGoing).length;
                 const notGoingRecords = records.filter(r => !r.isGoing).length;
                 let totalPeople = 0;
-                records.forEach(r => { if (r.isGoing && r.names) totalPeople += r.names.length; });
+                records.forEach(r => { if (r.isGoing) totalPeople += r.headcount; });
                 updateStats(totalRecords, goingRecords, notGoingRecords, totalPeople);
 
-                // Filtrar e Buscar
-                let filtered = [...records].reverse();
+                // Filtrar e Buscar (Supabase já vem com o mais novo primeiro, mas o fallback pode precisar)
+                let filtered = [...records];
                 
                 if (currentFilter === 'going') filtered = filtered.filter(r => r.isGoing);
                 if (currentFilter === 'notgoing') filtered = filtered.filter(r => !r.isGoing);
@@ -292,7 +318,7 @@
                                 </div>
                             </td>
                             <td class="py-4 px-4 text-center">
-                                <span class="font-cute text-lg ${r.isGoing ? 'text-gray-700' : 'text-gray-300'}">${r.isGoing ? namesList.length : '-'}</span>
+                                <span class="font-cute text-lg ${r.isGoing ? 'text-gray-700' : 'text-gray-300'}">${r.isGoing ? r.headcount : '-'}</span>
                             </td>
                             <td class="py-4 px-4 text-center">${statusHtml}</td>
                             <td class="py-4 pr-6 pl-4 text-right text-xs text-gray-400 font-medium group-hover:text-gray-600">${formatDate(r.timestamp)}</td>
@@ -342,7 +368,7 @@
             };
 
             window.exportToCSV = function() {
-                const records = loadData();
+                const records = loadedRecords;
                 if (records.length === 0) {
                     alert('Não há dados para exportar.');
                     return;

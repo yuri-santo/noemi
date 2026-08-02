@@ -1270,22 +1270,10 @@
                                 Sugestão de Presentes
                             </p>
                             <p class="address-text" style="font-size: 0.75rem; text-align: center; margin-bottom: 1rem;">
-                                Sua presença é nosso maior presente! Mas caso queira mimar a Noemí, aqui estão os tamanhos:
+                                Sua presença é nosso maior presente! Mas caso queira mimar a Noemi, aqui estão os tamanhos:
                             </p>
-                            
-                            <div style="display: grid; gap: 0.5rem;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
-                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-shirt" style="color: #87CEEB; width: 20px;"></i> Roupinha</span>
-                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Tam. 2 (anos)</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
-                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-shoe-prints" style="color: #F4A7B9; width: 20px;"></i> Calçado</span>
-                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Número 20</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
-                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-baby" style="color: #B39DDB; width: 20px;"></i> Fralda</span>
-                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Tam. G ou XG</span>
-                                </div>
+                            <div id="gift-list-container" style="display: grid; gap: 0.5rem;">
+                                <!-- Itens de presente serão carregados do Supabase aqui -->
                             </div>
                         </div>
                     </div>
@@ -1389,11 +1377,61 @@
            ⚠️ ATENÇÃO: COLOQUE SUAS CHAVES DO SUPABASE AQUI ⚠️
            ================================================================= */
         const SUPABASE_URL = "https://izphobguvtfjqzrsbkva.supabase.co"; // URL do seu projeto Supabase
-        const SUPABASE_ANON_KEY = "sb_publishable_9YA2FHoVi5ssVFnlu5BxmA_uUeAupwv"; // Chave pública fornecida
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6cGhvYmd1dnRmanF6cnNia3ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU2OTYzMjEsImV4cCI6MjEwMTI3MjMyMX0.EyLTpW7y1-UV4qllmw6Nh0mjN0r2wLQzxbmp99iHGOg"; // Chave pública fornecida
         
         let supabase = null;
         if (SUPABASE_URL !== "SUA_URL_AQUI") {
             supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            loadGiftsFromSupabase();
+        }
+
+        async function loadGiftsFromSupabase() {
+            if (!supabase) return;
+            const { data, error } = await supabase.from('gift_suggestions').select('*').order('created_at', { ascending: true });
+            if (!error && data && data.length > 0) {
+                const container = document.getElementById('gift-list-container');
+                if (!container) return;
+                const colors = ['#87CEEB', '#F4A7B9', '#87CEEB', '#F4A7B9', '#FFD700'];
+                container.innerHTML = data.map((item, index) => {
+                    const color = colors[index % colors.length];
+                    return `
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
+                        <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid ${item.icon}" style="color: ${color}; width: 20px;"></i> ${item.category}</span>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">${item.size_info}</span>
+                    </div>`;
+                }).join('');
+            }
+        }
+
+        function saveRSVP(names, isGoing) {
+            const rsvpData = {
+                guest_names: names.join(', '),
+                headcount: names.length,
+                is_going: isGoing,
+                created_at: new Date().toISOString()
+            };
+
+            // Salvar localmente por precaução
+            let stored = [];
+            try {
+                const s = localStorage.getItem('arca_noemi_rsvps');
+                if (s) stored = JSON.parse(s);
+            } catch(e) {}
+            stored.push(rsvpData);
+            localStorage.setItem('arca_noemi_rsvps', JSON.stringify(stored));
+
+            // Tenta salvar no Supabase também
+            if (supabase) {
+                supabase.from('guests').insert([{
+                    guest_names: rsvpData.guest_names,
+                    headcount: rsvpData.headcount,
+                    is_going: rsvpData.is_going
+                }]).then(() => {
+                    console.log("Salvo no Supabase com sucesso.");
+                }).catch(err => {
+                    console.error("Erro ao salvar no Supabase:", err);
+                });
+            }
         }
 
         const COVER_HIDE_DELAY_MS = 200;
@@ -1770,6 +1808,9 @@
             resNames.innerHTML = '';
             thankYou.style.display = 'none';
             thankYou.style.opacity = '0';
+
+            // Salvar via nova função modular
+            saveRSVP(names, isGoing);
 
             if (isGoing) {
                 activateGifBackground();
