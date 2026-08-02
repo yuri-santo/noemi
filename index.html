@@ -1480,29 +1480,18 @@
         /* ─── Lista de convidados ─── */
         async function loadGuests() {
             try {
-                const r = await fetch('convidados.txt');
-                if (!r.ok) throw 0;
-                const t = await r.text();
-                guestList = t.split('\n').map(norm).filter(Boolean);
+                if (!supabase) throw new Error("Supabase não inicializado");
+                const { data, error } = await supabase.from('allowed_guests').select('name');
+                if (error) throw error;
+                
+                const originalNames = data.map(d => d.name.trim()).filter(Boolean);
+                guestList = originalNames.map(norm);
                 guestListReady = true;
-                populateDatalist();
-            } catch {
-                guestList = [];
-                guestListReady = true;
-            }
-        }
-        guestListPromise = loadGuests();
-
-        function populateDatalist() {
-            if (!guestSuggestions) return;
-            guestSuggestions.innerHTML = '';
-            /* Usar os nomes originais do convidados.txt como sugestões */
-            const seen = new Set();
-            /* Precisamos dos nomes originais, não normalizados. Recarregar do fetch. */
-            fetch('convidados.txt')
-                .then(r => r.text())
-                .then(t => {
-                    const originalNames = t.split('\n').map(s => s.trim()).filter(Boolean);
+                
+                // Popula datalist
+                if (guestSuggestions) {
+                    guestSuggestions.innerHTML = '';
+                    const seen = new Set();
                     originalNames.forEach(name => {
                         if (!seen.has(name.toLowerCase())) {
                             seen.add(name.toLowerCase());
@@ -1511,9 +1500,17 @@
                             guestSuggestions.appendChild(opt);
                         }
                     });
-                })
-                .catch(() => {});
+                }
+            } catch (err) {
+                console.error("Erro ao carregar convidados do Supabase:", err);
+                guestList = [];
+                guestListReady = true;
+            }
         }
+        
+        // Só carrega a lista depois que o Supabase estiver pronto
+        // (O supabase é inicializado um pouco antes, então podemos chamar)
+        guestListPromise = loadGuests();
 
         function norm(s) {
             return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
