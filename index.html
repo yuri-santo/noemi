@@ -1169,12 +1169,12 @@
                 <div class="info-grid">
                     <div class="info-tile">
                         <div class="info-icon blue"><i class="fa-regular fa-calendar-days"></i></div>
-                        <span class="info-value">Sábado</span>
-                        <span class="info-label">20 de Junho</span>
+                        <span class="info-value" id="display-date-day">Sábado</span>
+                        <span class="info-label" id="display-date-month">20 de Junho</span>
                     </div>
                     <div class="info-tile">
                         <div class="info-icon gold"><i class="fa-regular fa-clock"></i></div>
-                        <span class="info-value">15:00</span>
+                        <span class="info-value" id="display-time">15:00</span>
                         <span class="info-label">Horário de Brasília</span>
                     </div>
                 </div>
@@ -1243,16 +1243,16 @@
                                 <i class="fa-solid fa-map-location-dot"></i>
                                 Local da Celebração
                             </p>
-                            <p class="address-text">
+                            <p class="address-text" id="display-address">
                                 <strong><i class="fa-solid fa-house"></i> Rua das Capoeiras, 36</strong><br>
                                 Bairro São Gabriel<br>
                                 Belo Horizonte — Minas Gerais<br>Brasil
                             </p>
-                            <a href="https://www.google.com/maps/search/?api=1&query=Rua+das+Capoeiras+36+São+Gabriel+Belo+Horizonte+Minas+Gerais+Brasil"
+                            <a id="btn-map-google" href="https://www.google.com/maps/search/?api=1&query=Rua+das+Capoeiras+36+São+Gabriel+Belo+Horizonte+Minas+Gerais+Brasil"
                                target="_blank" rel="noopener noreferrer" class="btn-map google">
                                 <i class="fa-solid fa-route"></i> Abrir no Google Maps
                             </a>
-                            <a href="https://www.waze.com/ul?q=Rua+das+Capoeiras+36+São+Gabriel+Belo+Horizonte+Minas+Gerais+Brasil"
+                            <a id="btn-map-waze" href="https://www.waze.com/ul?q=Rua+das+Capoeiras+36+São+Gabriel+Belo+Horizonte+Minas+Gerais+Brasil"
                                target="_blank" rel="noopener noreferrer" class="btn-map waze">
                                 <i class="fa-brands fa-waze"></i> Abrir no Waze
                             </a>
@@ -1355,6 +1355,7 @@
         let supabaseClient = null;
         if (SUPABASE_URL !== "SUA_URL_AQUI") {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            loadEventDetails();
             loadGiftsFromSupabase();
         }
 
@@ -1373,6 +1374,27 @@
                         <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">${item.size_info}</span>
                     </div>`;
                 }).join('');
+            }
+        }
+
+        async function loadEventDetails() {
+            if (!supabaseClient) return;
+            const { data, error } = await supabaseClient.from('event_details').select('*').limit(1).single();
+            if (!error && data) {
+                if (data.event_date) {
+                    const d = new Date(data.event_date);
+                    const days = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+                    const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+                    document.getElementById('display-date-day').innerText = days[d.getDay()];
+                    document.getElementById('display-date-month').innerText = d.getDate() + ' de ' + months[d.getMonth()];
+                    document.getElementById('display-time').innerText = d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+                }
+                if (data.location_address) {
+                    document.getElementById('display-address').innerHTML = '<strong><i class="fa-solid fa-house"></i> ' + data.location_address.replace(/\\n/g, '<br>') + '</strong>';
+                    const encoded = encodeURIComponent(data.location_address);
+                    document.getElementById('btn-map-google').href = 'https://www.google.com/maps/search/?api=1&query=' + encoded;
+                    document.getElementById('btn-map-waze').href = 'https://www.waze.com/ul?q=' + encoded;
+                }
             }
         }
 
@@ -1401,6 +1423,12 @@
                     is_going: rsvpData.is_going
                 }]).then(() => {
                     console.log("Salvo no Supabase com sucesso.");
+                    // Marcar como confirmado na lista de allowed_guests
+                    supabaseClient.from('allowed_guests')
+                        .update({ has_confirmed: true })
+                        .in('name', names)
+                        .then(() => console.log("Atualizado has_confirmed com sucesso."))
+                        .catch(err => console.error("Erro ao atualizar has_confirmed:", err));
                 }).catch(err => {
                     console.error("Erro ao salvar no Supabase:", err);
                 });
@@ -1453,10 +1481,10 @@
         async function loadGuests() {
             try {
                 if (!supabaseClient) throw new Error("Supabase não inicializado");
-                const { data, error } = await supabaseClient.from('allowed_guests').select('name');
+                const { data, error } = await supabaseClient.from('allowed_guests').select('name, has_confirmed');
                 if (error) throw error;
                 
-                const originalNames = data.map(d => d.name.trim()).filter(Boolean);
+                const originalNames = data.filter(d => !d.has_confirmed).map(d => d.name.trim()).filter(Boolean);
                 guestList = originalNames.map(norm);
                 guestListReady = true;
                 
