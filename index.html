@@ -1439,7 +1439,6 @@
         const guestSuggestions = document.getElementById('guest-suggestions');
         const namePreview   = document.getElementById('name-preview');
         const rsvpError     = document.getElementById('rsvp-error-msg');
-        const thankYou      = document.getElementById('thank-you-section');
         const particles     = document.getElementById('particles');
         const lockNote      = document.querySelector('.lock-note');
 
@@ -1665,12 +1664,6 @@
 
         function showThankYou() {
             setCelebrationMode(false);
-            thankYou.style.opacity = '0';
-            thankYou.style.display = 'block';
-            void thankYou.offsetWidth;
-            thankYou.style.transition = 'opacity 1s ease';
-            thankYou.style.opacity = '1';
-            thankYou.scrollIntoView({ behavior: 'smooth', block: 'center' });
             confetti({
                 particleCount: 60, spread: 100, origin: { y: .5 },
                 colors: ['#D4AF37','#FFD700','#87CEEB','#B39DDB','#fff']
@@ -1776,8 +1769,6 @@
             }, 400);
 
             resNames.innerHTML = '';
-            thankYou.style.display = 'none';
-            thankYou.style.opacity = '0';
 
             // Salvar via nova função modular
             saveRSVP(names, isGoing);
@@ -1851,8 +1842,6 @@
             namePreview.classList.remove('show');
             namePreview.innerHTML = '';
             resNames.innerHTML = '';
-            thankYou.style.display = 'none';
-            thankYou.style.opacity = '0';
             const giftBox = document.getElementById('gift-box');
             if (giftBox) giftBox.style.display = 'none';
             rsvpSection.style.display = 'block';
