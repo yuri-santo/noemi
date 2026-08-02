@@ -1140,7 +1140,7 @@
             <div class="gold-divider"><span></span><i class="fa-solid fa-dove"></i><span></span></div>
 
             <!-- ══ Texto ══ -->
-            <div class="section reveal">
+            <div id="intro-text-section" class="section reveal">
                 <div style="position:relative; padding: 0 1.25rem; margin-bottom: 1.25rem;">
                     <i class="fa-solid fa-quote-left" style="position:absolute;top:-0.5rem;left:-0.2rem;font-size:1.5rem;color:rgba(135,206,235,.4);"></i>
                     <i class="fa-solid fa-quote-right" style="position:absolute;bottom:-0.5rem;right:-0.2rem;font-size:1.5rem;color:rgba(135,206,235,.4);"></i>
@@ -1757,9 +1757,12 @@
                 return;
             }
 
-            /* Transição: fade-out do RSVP */
+            /* Transição: fade-out do RSVP e texto inicial */
+            const introTextSection = document.getElementById('intro-text-section');
+            if (introTextSection) introTextSection.classList.add('hidden');
             rsvpSection.classList.add('hidden');
             setTimeout(() => {
+                if (introTextSection) introTextSection.style.display = 'none';
                 rsvpSection.style.display = 'none';
 
                 /* Mostra resultado com fade-in */
@@ -1844,6 +1847,12 @@
             resNames.innerHTML = '';
             const giftBox = document.getElementById('gift-box');
             if (giftBox) giftBox.style.display = 'none';
+            const introTextSection = document.getElementById('intro-text-section');
+            if (introTextSection) {
+                introTextSection.style.display = 'block';
+                void introTextSection.offsetWidth;
+                introTextSection.classList.remove('hidden');
+            }
             rsvpSection.style.display = 'block';
             void rsvpSection.offsetWidth;
             rsvpSection.classList.remove('hidden');
