@@ -1074,9 +1074,9 @@
         <div id="bd-text">
             <div class="bd-name">Noemi</div>
             <div class="bd-sub">
-                <i class="fa-solid fa-star" style="color:var(--gold);font-size:.7em;margin-right:5px;"></i>
-                Primeiro Aninho
-                <i class="fa-solid fa-star" style="color:var(--gold);font-size:.7em;margin-left:5px;"></i>
+                <i class="fa-solid fa-rainbow" style="color:var(--gold);font-size:.7em;margin-right:5px;"></i>
+                1 aninho
+                <i class="fa-solid fa-rainbow" style="color:var(--gold);font-size:.7em;margin-left:5px;"></i>
             </div>
             <div class="bd-verse">
                 <i class="fa-solid fa-dove"></i>
@@ -1099,7 +1099,7 @@
 
         <div class="cover-divider" aria-hidden="true">
             <span></span>
-            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-rainbow"></i>
             <span></span>
         </div>
 
@@ -1128,11 +1128,11 @@
             <div class="section reveal" style="text-align:center; padding-top:2rem;">
                 <div class="photo-frame">
                     <img src="noemi.jpeg" alt="Foto da Noemi"
-                         onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,rgba(244,167,185,.3),rgba(135,206,235,.3));display:flex;align-items:center;justify-content:center;border:3px solid #fff;\'><i class=\'fa-solid fa-heart\' style=\'font-size:2.5rem;color:var(--pink);\'></i></div>'">
+                         onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,rgba(244,167,185,.3),rgba(135,206,235,.3));display:flex;align-items:center;justify-content:center;border:3px solid #fff;\'><i class=\'fa-solid fa-dove\' style=\'font-size:2.5rem;color:var(--pink);\'></i></div>'">
                 </div>
 
                 <p class="section-overline">
-                    <i class="fa-solid fa-star"></i> Primeiro Aninho <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-rainbow"></i> 1 aninho <i class="fa-solid fa-rainbow"></i>
                 </p>
                 <h2 class="invite-name">Noemi</h2>
             </div>
@@ -1146,7 +1146,7 @@
                     <i class="fa-solid fa-quote-right" style="position:absolute;bottom:-0.5rem;right:-0.2rem;font-size:1.5rem;color:rgba(135,206,235,.4);"></i>
                     <p class="invite-body" style="margin-bottom:0; position:relative; z-index:1;">
                         Com o coração transbordando de gratidão ao Senhor, convidamos você e sua família
-                        para celebrar o <strong>primeiro aninho</strong> da nossa preciosa Noemi.
+                        para celebrar o <strong>1 aninho</strong> da nossa preciosa Noemi.
                     </p>
                 </div>
 
@@ -1162,7 +1162,7 @@
                 </div>
             </div>
 
-            <div class="gold-divider" style="margin-top:1.5rem;"><span></span><i class="fa-solid fa-star"></i><span></span></div>
+            <div class="gold-divider" style="margin-top:1.5rem;"><span></span><i class="fa-solid fa-rainbow"></i><span></span></div>
 
             <!-- ══ Data e Hora ══ -->
             <div class="section reveal">
@@ -1186,7 +1186,7 @@
             <div class="section reveal" id="rsvp-section">
                 <div class="rsvp-wrap">
                     <h3 class="rsvp-title">
-                        <i class="fa-solid fa-heart" style="color: #9ca3af;"></i>Confirme sua presença
+                        <i class="fa-solid fa-dove" style="color: #9ca3af;"></i>Confirme sua presença
                     </h3>
                     <p class="rsvp-sub">Para prepararmos tudo com muito amor, nos avise se poderá comparecer.</p>
                     <p class="rsvp-hint" id="rsvp-hint-text">
@@ -1228,7 +1228,7 @@
             <!-- ══ Resultado ══ -->
             <div class="section" id="result-section">
                 <div id="res-ring" class="result-icon-ring green">
-                    <i id="res-icon" class="fa-solid fa-heart" style="font-size:1.7rem;color:#16a34a;"></i>
+                    <i id="res-icon" class="fa-solid fa-dove" style="font-size:1.7rem;color:#16a34a;"></i>
                 </div>
                 <h3 id="res-title" class="result-title green"></h3>
                 <div id="res-names" style="margin-bottom:.7rem; text-align:center;"></div>
@@ -1267,7 +1267,7 @@
                         <div class="address-body">
                             <p class="address-title">
                                 <i class="fa-solid fa-gift" style="color: var(--gold);"></i>
-                                Sugestão de Presentes
+                                Aqui estão algumas sugestões
                             </p>
                             <p class="address-text" style="font-size: 0.75rem; text-align: center; margin-bottom: 1rem;">
                                 Sua presença é nosso maior presente! Mas caso queira mimar a Noemi, aqui estão os tamanhos:
@@ -1860,7 +1860,7 @@
 
             if (isGoing) {
                 activateGifBackground();
-                resIcon.className = 'fa-solid fa-heart';
+                resIcon.className = 'fa-solid fa-dove';
                 resIcon.style.cssText = 'font-size:1.7rem;color:#16a34a;';
                 resRing.className = 'result-icon-ring green';
                 resTitle.textContent = 'Graças a Deus!';
@@ -1871,7 +1871,7 @@
                 resMsg.innerHTML = 'Que alegria, '+nh+'! '
                     +(pl?'Suas presenças foram confirmadas':'Sua presença foi confirmada')
                     +'. A Noemi e toda a família '
-                    +(pl?'ficarão':'ficará')+' muito '
+                    +'ficarão muito '
                     +(pl?'felizes':'feliz')+' com '
                     +(pl?'vocês':'você')+' na nossa Arca. Deus abençoe! '
                     +'<i class="fa-solid fa-dove" style="color:var(--gold);margin-left:4px;"></i>';
