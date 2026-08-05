@@ -1386,14 +1386,14 @@
             if (!supabaseClient) return;
             const { data, error } = await supabaseClient.from('event_details').select('*').limit(1).single();
             if (!error && data) {
-                if (data.event_date) {
+                /* if (data.event_date) {
                     const d = new Date(data.event_date);
                     const days = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
                     const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
                     document.getElementById('display-date-day').innerText = days[d.getDay()];
                     document.getElementById('display-date-month').innerText = d.getDate() + ' de ' + months[d.getMonth()];
                     document.getElementById('display-time').innerText = d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
-                }
+                } */
                 if (data.show_location === false) {
                     document.getElementById('display-address').innerHTML = '<strong><i class="fa-solid fa-house"></i> Local a definir</strong><br>Aguarde mais informações';
                     document.getElementById('btn-map-google').style.display = 'none';
