@@ -5,30 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin — Arca da Noemí</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="tailwind-admin.css">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600;700&family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Montserrat', 'sans-serif'],
-                        cursive: ['"Great Vibes"', 'cursive'],
-                        cute: ['"Baloo 2"', 'cursive'],
-                    },
-                    colors: {
-                        'ark-blue': '#87CEEB',
-                        'ark-darkblue': '#3B7DD8',
-                        'ark-gold': '#D4AF37',
-                        'ark-brown': '#6B4423',
-                    }
-                }
-            }
-        }
-    </script>
 
     <style>
         * { box-sizing: border-box; }
@@ -259,7 +239,8 @@
                             names: row.guest_names.split(',').map(n => n.trim()),
                             isGoing: row.is_going,
                             timestamp: row.created_at,
-                            headcount: row.headcount
+                            headcount: row.headcount,
+                            companions: row.companions || []
                         }));
                         return loadedRecords;
                     }
@@ -272,7 +253,8 @@
                         names: row.guest_names ? row.guest_names.split(',').map(n => n.trim()) : (row.names || []),
                         isGoing: row.is_going !== undefined ? row.is_going : row.isGoing,
                         timestamp: row.created_at || row.date || new Date().toISOString(),
-                        headcount: row.headcount || (row.names ? row.names.length : 1)
+                        headcount: row.headcount || (row.names ? row.names.length : 1),
+                        companions: row.companions || []
                     }));
                 } catch (e) {
                     loadedRecords = [];
@@ -343,26 +325,40 @@
                         return `<span class="text-gray-500">${n}</span>`;
                     }).join('<span class="mx-1 text-gray-300">•</span>');
 
+                    let companionsHtml = '';
+                    if (r.companions && r.companions.length > 0) {
+                        companionsHtml = `<div class="mt-2 flex flex-col gap-1 pl-4 border-l-2 border-gray-200">` + r.companions.map(c => `
+                            <div class="flex items-center gap-2 text-xs">
+                                <span class="w-1.5 h-1.5 rounded-full ${c.type === 'Adulto' ? 'bg-blue-400' : 'bg-green-400'}"></span>
+                                <span class="text-gray-600 font-medium">${c.name}</span>
+                                <span class="text-gray-400">(${c.type})</span>
+                            </div>
+                        `).join('') + `</div>`;
+                    }
+
                     const statusHtml = r.isGoing
                         ? '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-600 font-bold text-[11px] uppercase tracking-wide border border-green-100"><i class="fa-solid fa-check"></i> Vai</span>'
                         : '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-500 font-bold text-[11px] uppercase tracking-wide border border-red-100"><i class="fa-solid fa-xmark"></i> Não vai</span>';
 
                     return `
                         <tr class="hover:bg-blue-50/30 transition-colors group">
-                            <td class="py-4 pl-6 pr-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full avatar-initials flex items-center justify-center text-xs font-bold flex-shrink-0">
+                            <td class="py-4 pl-6 pr-4 align-top">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-8 h-8 rounded-full avatar-initials flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                                         ${initials}
                                     </div>
-                                    <div class="truncate max-w-[200px] sm:max-w-xs">${namesHtml}</div>
+                                    <div class="flex-1">
+                                        <div class="max-w-[200px] sm:max-w-xs whitespace-normal break-words">${namesHtml}</div>
+                                        ${companionsHtml}
+                                    </div>
                                 </div>
                             </td>
-                            <td class="py-4 px-4 text-center">
+                            <td class="py-4 px-4 text-center align-top">
                                 <span class="font-cute text-lg ${r.isGoing ? 'text-gray-700' : 'text-gray-300'}">${r.isGoing ? r.headcount : '-'}</span>
                             </td>
-                            <td class="py-4 px-4 text-center">${statusHtml}</td>
-                            <td class="py-4 pr-6 pl-4 text-right text-xs text-gray-400 font-medium group-hover:text-gray-600">${formatDate(r.timestamp)}</td>
-                            <td class="py-4 px-4 text-center">
+                            <td class="py-4 px-4 text-center align-top">${statusHtml}</td>
+                            <td class="py-4 pr-6 pl-4 text-right text-xs text-gray-400 font-medium group-hover:text-gray-600 align-top">${formatDate(r.timestamp)}</td>
+                            <td class="py-4 px-4 text-center align-top">
                                 <button onclick="deleteRSVP('${r.names.join(', ').replace(/'/g, "\\'")}')" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition-colors" title="Excluir Registro">
                                     <i class="fa-solid fa-trash-can"></i>
                                 </button>
@@ -453,182 +449,7 @@
                 document.body.removeChild(link);
             };
 
-            // GERENCIAMENTO DA LISTA DE CONVIDADOS (Aba 2)
-            const guestsTableBody = document.getElementById('guests-table-body');
-            
-            async function renderGuests() {
-                if (!supabaseClient) return;
-                guestsTableBody.innerHTML = '<tr><td colspan="2" class="py-8 text-center text-gray-400"><i class="fa-solid fa-spinner fa-spin text-2xl"></i></td></tr>';
-                
-                const { data, error } = await supabaseClient.from('allowed_guests').select('*').order('name', { ascending: true });
-                if (error || !data || data.length === 0) {
-                    guestsTableBody.innerHTML = '<tr><td colspan="2" class="py-8 text-center text-gray-400 font-semibold">Nenhum convidado na lista.</td></tr>';
-                    return;
-                }
 
-                guestsTableBody.innerHTML = data.map(g => `
-                    <tr class="hover:bg-gray-50/50 transition-colors group">
-                        <td class="py-3 pl-6 pr-4">
-                            <span class="font-bold text-gray-700">${g.name}</span>
-                        </td>
-                        <td class="py-3 px-4 text-center">
-                            <button onclick="deleteGuest('${g.id}')" class="text-red-400 hover:text-red-600 transition-colors bg-red-50 hover:bg-red-100 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-
-            window.addGuest = async function() {
-                const input = document.getElementById('new-guest-name');
-                const name = input.value.trim();
-                if (!name) return;
-
-                input.disabled = true;
-                const { error } = await supabaseClient.from('allowed_guests').insert([{ name }]);
-                input.disabled = false;
-                
-                if (!error) {
-                    input.value = '';
-                    renderGuests();
-                } else {
-                    alert('Erro ao adicionar convidado.');
-                }
-            };
-
-            window.deleteGuest = async function(id) {
-                if (confirm('Tem certeza que deseja remover este nome da lista permitida?')) {
-                    await supabaseClient.from('allowed_guests').delete().eq('id', id);
-                    renderGuests();
-                }
-            };
-
-            // LÓGICA DE DADOS - EVENTO
-            async function renderEventDetails() {
-                if (!supabaseClient) return;
-                const { data, error } = await supabaseClient.from('event_details').select('*').limit(1).single();
-                if (!error && data) {
-                    if (data.event_date) {
-                        // Converter UTC para input datetime-local
-                        const d = new Date(data.event_date);
-                        const pad = (n) => n.toString().padStart(2, '0');
-                        document.getElementById('input-event-date').value = 
-                            `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-                    }
-                    if (data.location_address) {
-                        document.getElementById('input-event-location').value = data.location_address;
-                    }
-                    if (data.location_url) {
-                        document.getElementById('input-event-location-url').value = data.location_url;
-                    }
-                    if (data.show_location !== undefined && data.show_location !== null) {
-                        document.getElementById('input-event-show-location').checked = data.show_location;
-                    }
-                }
-            }
-
-            window.saveEventDetails = async function() {
-                if (!supabaseClient) return;
-                const dateVal = document.getElementById('input-event-date').value;
-                const locVal = document.getElementById('input-event-location').value;
-                
-                const { data: existing } = await supabaseClient.from('event_details').select('id').limit(1).single();
-                
-                let isoDate = null;
-                if (dateVal) {
-                    isoDate = new Date(dateVal).toISOString();
-                }
-
-                const payload = {
-                    event_date: isoDate,
-                    location_address: locVal,
-                    location_url: document.getElementById('input-event-location-url').value,
-                    show_location: document.getElementById('input-event-show-location').checked
-                };
-
-                if (existing) {
-                    await supabaseClient.from('event_details').update(payload).eq('id', existing.id);
-                } else {
-                    await supabaseClient.from('event_details').insert([payload]);
-                }
-
-                const msg = document.getElementById('event-save-msg');
-                msg.classList.remove('hidden');
-                setTimeout(() => msg.classList.add('hidden'), 3000);
-            };
-
-            // LÓGICA DE DADOS - PRESENTES
-            async function renderGifts() {
-                if (!supabaseClient) return;
-                const tbody = document.getElementById('gifts-table-body');
-                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-400">Carregando...</td></tr>';
-                const { data, error } = await supabaseClient.from('gift_suggestions').select('*').order('created_at', { ascending: true });
-                
-                if (error || !data || data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-400 font-semibold">Nenhum presente cadastrado.</td></tr>';
-                    return;
-                }
-
-                tbody.innerHTML = data.map(g => `
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="p-4 text-gray-500"><i class="fa-solid ${g.icon || 'fa-gift'}"></i></td>
-                        <td class="p-4 font-bold text-gray-800">${g.category || ''}</td>
-                        <td class="p-4 text-gray-600">${g.size_info || ''}</td>
-                        <td class="p-4 text-center">
-                            <button onclick="editGiftSize('${g.id}', \`${g.size_info || ''}\`)" class="text-blue-400 hover:text-blue-600 p-2 rounded-lg hover:bg-blue-50 transition-colors mr-2" title="Editar Tamanho/Info">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button onclick="deleteGift('${g.id}')" class="text-red-400 hover:text-red-600 p-2 rounded-lg hover:bg-red-50 transition-colors" title="Excluir">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-
-            window.editGiftSize = async function(id, currentSize) {
-                if (!supabaseClient) return;
-                const newSize = prompt("Novo Tamanho/Info:", currentSize);
-                if (newSize !== null) {
-                    await supabaseClient.from('gift_suggestions').update({ size_info: newSize }).eq('id', id);
-                    renderGifts();
-                }
-            };
-
-            window.addGift = async function() {
-                if (!supabaseClient) return;
-                const catInput = document.getElementById('input-gift-cat');
-                const sizeInput = document.getElementById('input-gift-size');
-                const iconInput = document.getElementById('input-gift-icon');
-                
-                if (!catInput.value) return;
-
-                await supabaseClient.from('gift_suggestions').insert([{
-                    category: catInput.value,
-                    size_info: sizeInput.value,
-                    icon: iconInput.value || 'fa-gift'
-                }]);
-                
-                catInput.value = '';
-                sizeInput.value = '';
-                iconInput.value = '';
-                
-                renderGifts();
-            };
-
-            window.deleteGift = async function(id) {
-                if (confirm('Remover este presente?')) {
-                    await supabaseClient.from('gift_suggestions').delete().eq('id', id);
-                    renderGifts();
-                }
-            };
-
-            // Expõe pro escopo global o renderGuests pra as tabs
-            window.renderGuests = renderGuests;
-            window.renderEventDetails = renderEventDetails;
-            window.renderGifts = renderGifts;
-            window.render = render; 
 
             // Init
             render();
