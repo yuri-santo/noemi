@@ -1,11 +1,46 @@
+# Blueprint do site estático no Render.
+#
+# OBSERVAÇÃO: o serviço em produção (convite-noemi) foi criado à mão pelo
+# dashboard, e nesse caso o Render ignora este arquivo. As mesmas configurações
+# abaixo já foram aplicadas direto no serviço pela API. Este arquivo serve para
+# recriar o site do zero via Blueprint sem perder nada.
+#
+# O nome aqui precisa bater com o serviço existente (era "noemi-1-aninho",
+# que não existe — mais um motivo de nada daqui ter efeito).
 services:
   - type: web
-    name: noemi-1-aninho
-    env: static
+    name: convite-noemi
+    runtime: static
     staticPublishPath: .
-    headers:
-      - path: /*
-        name: Cache-Control
-        value: public, max-age=3600
-    buildCommand: null
     pullRequestPreviewsEnabled: false
+    headers:
+      # Clickjacking: impede embutir o painel admin num iframe de outro site.
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+
+      # O HTML fica sem cache longo de propósito (o Render já manda
+      # max-age=0 + s-maxage no CDN), para um deploy aparecer na hora.
+      # Já os assets pesados valem 7 dias: sem isso o navegador revalidava
+      # o vídeo de ~4 MB a cada visita.
+      - path: /*.mp4
+        name: Cache-Control
+        value: public, max-age=604800
+      - path: /*.webp
+        name: Cache-Control
+        value: public, max-age=604800
+      - path: /*.mp3
+        name: Cache-Control
+        value: public, max-age=604800
+      - path: /*.jpeg
+        name: Cache-Control
+        value: public, max-age=604800
+      - path: /*.png
+        name: Cache-Control
+        value: public, max-age=604800
+      - path: /*.ico
+        name: Cache-Control
+        value: public, max-age=604800
