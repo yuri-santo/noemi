@@ -1,0 +1,42 @@
+# No plano free, o Supabase pausa o projeto depois de ~7 dias sem atividade no
+# banco — e projeto pausado significa convidado sem conseguir confirmar presença.
+# Este job cutuca o banco a cada 3 dias para manter tudo acordado.
+#
+# Usa a chave anon, que já é pública no HTML do site. Com o RLS ativo ela só
+# consegue chamar esta função de checagem: não lê a lista e não apaga nada.
+#
+# ATENÇÃO: o GitHub desativa workflows agendados após 60 dias sem commits no
+# repositório. Se faltar muito para a festa, entre na aba Actions e clique em
+# "Enable workflow" (ou rode na mão em "Run workflow").
+name: Manter banco ativo
+
+on:
+  schedule:
+    - cron: '0 8 */3 * *'   # a cada 3 dias, 08:00 UTC (05:00 em Brasília)
+  workflow_dispatch:        # permite rodar manualmente pelo painel do GitHub
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar o Supabase
+        env:
+          SUPABASE_URL: https://izphobguvtfjqzrsbkva.supabase.co
+          ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6cGhvYmd1dnRmanF6cnNia3ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU2OTYzMjEsImV4cCI6MjEwMTI3MjMyMX0.EyLTpW7y1-UV4qllmw6Nh0mjN0r2wLQzxbmp99iHGOg
+        run: |
+          CODIGO=$(curl -s -o /tmp/resposta.txt -w '%{http_code}' \
+            -X POST "$SUPABASE_URL/rest/v1/rpc/nome_ja_confirmado" \
+            -H "apikey: $ANON_KEY" \
+            -H "Authorization: Bearer $ANON_KEY" \
+            -H 'Content-Type: application/json' \
+            -d '{"p_nomes":["__keepalive__"]}')
+
+          echo "HTTP $CODIGO"
+          cat /tmp/resposta.txt
+          echo
+
+          if [ "$CODIGO" != "200" ]; then
+            echo "::error::O banco nao respondeu como esperado (HTTP $CODIGO)."
+            exit 1
+          fi
+          echo "Banco acordado com sucesso."

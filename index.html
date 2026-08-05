@@ -2,12 +2,34 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- viewport-fit=cover: usa a tela toda em celulares com notch -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#87CEEB">
+    <meta name="description" content="Venha celebrar o 1º aninho da Noemi na nossa Arca de Noé!">
     <title>Convite: 1 Aninho da Noemi — Arca de Noé</title>
+
+    <!-- Ícone da aba: a mesma foto que gira na tela de confirmação -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <!-- Preview ao compartilhar o link no WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Convite: 1 Aninho da Noemi 🕊️">
+    <meta property="og:description" content="Venha celebrar o 1º aninho da Noemi na nossa Arca de Noé!">
+    <meta property="og:image" content="https://convite-noemi.onrender.com/noemi.jpeg">
+    <meta property="og:url" content="https://convite-noemi.onrender.com/">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- preconnect: abre a conexão com os CDNs antes de precisar deles (ganha ~200ms no 4G) -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://izphobguvtfjqzrsbkva.supabase.co">
 
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600;700&family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -82,7 +104,7 @@
             z-index: 2;
             background:
                 linear-gradient(rgba(7,18,45,.18), rgba(7,18,45,.18)),
-                url('gif.gif') center center / cover no-repeat;
+                url('gif.webp') center center / cover no-repeat;
             opacity: 0;
             transition: none;
             pointer-events: none;
@@ -1068,8 +1090,8 @@
         <div id="bd-img-wrap">
             <div class="ring ring-1"></div>
             <div class="ring ring-2"></div>
-            <img id="bd-img" src="aniversariante.png" alt="Noemi — 1 Aninho"
-                 onerror="this.style.display='none'">
+            <img id="bd-img" src="aniversariante.webp" alt="Noemi — 1 Aninho"
+                 decoding="async" onerror="this.style.display='none'">
         </div>
         <div id="bd-text">
             <div class="bd-name">Noemi</div>
@@ -1191,19 +1213,20 @@
                     <p class="rsvp-sub">Para prepararmos tudo com muito amor, nos avise se poderá comparecer.</p>
                     <p class="rsvp-hint" id="rsvp-hint-text">
                         <i class="fa-solid fa-circle-info"></i>
-                        Digite um nome ou separe por <strong>vírgula</strong> para confirmar mais de uma pessoa.
+                        Digite seu <strong>nome e sobrenome</strong>. No próximo passo você adiciona
+                        os acompanhantes da sua família.
                     </p>
 
                     <div class="input-wrap">
-                        <label for="guest-name" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">Nome do convidado</label>
-                        <i class="fa-solid fa-users icon-left" aria-hidden="true"></i>
+                        <label for="guest-name" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">Seu nome</label>
+                        <i class="fa-solid fa-user icon-left" aria-hidden="true"></i>
                         <input id="guest-name" type="text" class="rsvp-input"
                                placeholder="Digite seu nome..."
-                               autocomplete="off"
-                               list="guest-suggestions"
-                               aria-label="Digite o nome do convidado"
+                               autocomplete="name"
+                               enterkeyhint="done"
+                               autocapitalize="words"
+                               aria-label="Digite o seu nome"
                                aria-describedby="rsvp-hint-text rsvp-error-msg">
-                        <datalist id="guest-suggestions"></datalist>
                     </div>
 
                     <div id="name-preview" role="status" aria-live="polite"></div>
@@ -1231,7 +1254,7 @@
                     <h3 class="rsvp-title">
                         <i class="fa-solid fa-users" style="color: #9ca3af;"></i>Acompanhantes
                     </h3>
-                    <p class="rsvp-sub">Quem vai com você? (Adicione familiares se houver)</p>
+                    <p class="rsvp-sub">Quem vai com você? Toque em <strong>Adulto</strong> ou <strong>Criança</strong> para cada acompanhante. O nome é opcional.</p>
 
                     <div id="companions-list" style="display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1rem; margin-bottom: 1rem;">
                         <!-- inputs added here -->
@@ -1302,7 +1325,7 @@
                             </p>
                             <div id="gift-list-container" style="display: grid; gap: 0.5rem;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
-                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-shapes" style="color: #87CEEB; width: 20px;"></i> Brinquedo</span>
+                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-puzzle-piece" style="color: #87CEEB; width: 20px;"></i> Brinquedo</span>
                                     <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Menina (+1 ano)</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
@@ -1393,12 +1416,12 @@
         const SUPABASE_URL = "https://izphobguvtfjqzrsbkva.supabase.co"; // URL do seu projeto Supabase
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6cGhvYmd1dnRmanF6cnNia3ZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU2OTYzMjEsImV4cCI6MjEwMTI3MjMyMX0.EyLTpW7y1-UV4qllmw6Nh0mjN0r2wLQzxbmp99iHGOg"; // Chave pública fornecida
         
-        let supabaseClient = null;
-        if (SUPABASE_URL !== "SUA_URL_AQUI") {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        }
+        // window.supabase pode não existir se o CDN cair / for bloqueado (comum em 3G).
+        // Sem o `?.` um TypeError aqui derrubava TODO o script: nem o convite abria.
+        const supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) ?? null;
+        if (!supabaseClient) console.error('Supabase indisponível — as confirmações ficarão salvas só neste aparelho.');
 
-        function saveRSVP(names, isGoing, companions = []) {
+        async function saveRSVP(names, isGoing, companions = []) {
             const rsvpData = {
                 guest_names: names.join(', '),
                 headcount: isGoing ? names.length + companions.length : names.length,
@@ -1414,21 +1437,28 @@
                 if (s) stored = JSON.parse(s);
             } catch(e) {}
             stored.push(rsvpData);
-            localStorage.setItem('arca_noemi_rsvps', JSON.stringify(stored));
+            try { localStorage.setItem('arca_noemi_rsvps', JSON.stringify(stored)); } catch(e) {}
 
-            // Tenta salvar no Supabase também
-            if (supabaseClient) {
-                supabaseClient.from('guests').insert([{
-                    guest_names: rsvpData.guest_names,
-                    headcount: rsvpData.headcount,
-                    is_going: rsvpData.is_going,
-                    companions: rsvpData.companions
-                }]).then(() => {
-                    console.log("Salvo no Supabase com sucesso.");
-                }).catch(err => {
-                    console.error("Erro ao salvar no Supabase:", err);
-                });
+            if (!supabaseClient) {
+                return { ok: false, message: 'Não conseguimos falar com o servidor.' };
             }
+
+            // O supabase-js v2 NÃO rejeita a promise em erro: devolve { error }.
+            // O .catch() antigo nunca disparava, então uma falha do banco passava
+            // batido e o convidado via "presença confirmada" sem nada ter sido salvo.
+            const { error } = await supabaseClient.from('guests').insert([{
+                guest_names: rsvpData.guest_names,
+                headcount: rsvpData.headcount,
+                is_going: rsvpData.is_going,
+                companions: rsvpData.companions
+            }]);
+
+            if (error) {
+                console.error('Erro ao salvar no Supabase:', error);
+                return { ok: false, message: error.message };
+            }
+
+            return { ok: true };
         }
 
         const COVER_HIDE_DELAY_MS = 200;
@@ -1460,7 +1490,6 @@
         const resMsg        = document.getElementById('res-msg');
         const resNames      = document.getElementById('res-names');
         const guestInput    = document.getElementById('guest-name');
-        const guestSuggestions = document.getElementById('guest-suggestions');
         const namePreview   = document.getElementById('name-preview');
         const rsvpError     = document.getElementById('rsvp-error-msg');
         const particles     = document.getElementById('particles');
@@ -1469,65 +1498,34 @@
         let musicPlaying = false;
         let muted        = false;
         let opened       = false;
-        // Controle de Confirmação
-        let guestData    = [];
-        let guestListReady = false;
-        let guestListPromise = null;
-
-        /* ─── Lista de convidados ─── */
-        async function loadGuests() {
-            try {
-                if (!supabaseClient) throw new Error("Supabase não inicializado");
-                const { data, error } = await supabaseClient.from('allowed_guests').select('name, has_confirmed');
-                if (error) throw error;
-                
-                guestData = data.filter(d => d.name && d.name.trim() !== '').map(d => ({
-                    originalName: d.name.trim(),
-                    normName: norm(d.name.trim()),
-                    has_confirmed: d.has_confirmed
-                }));
-                
-                guestListReady = true;
-                
-                // Popula datalist apenas com não confirmados
-                if (guestSuggestions) {
-                    guestSuggestions.innerHTML = '';
-                    const seen = new Set();
-                    guestData.filter(d => !d.has_confirmed).forEach(d => {
-                        if (!seen.has(d.originalName.toLowerCase())) {
-                            seen.add(d.originalName.toLowerCase());
-                            const opt = document.createElement('option');
-                            opt.value = d.originalName;
-                            guestSuggestions.appendChild(opt);
-                        }
-                    });
-                }
-            } catch (err) {
-                console.error("Erro ao carregar convidados do Supabase:", err);
-                guestData = [];
-                guestListReady = true;
-            }
-        }
-        
-        // Só carrega a lista depois que o Supabase estiver pronto
-        // (O supabase é inicializado um pouco antes, então podemos chamar)
-        guestListPromise = loadGuests();
+        // Não existe lista prévia de convidados: quem abre o link digita o próprio nome
+        // (titular da família) e depois adiciona os acompanhantes.
 
         function norm(s) {
             return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
         }
-        function getGuest(n) { return guestData.find(g => g.normName === norm(n)); }
+
+        // "yuri" e "YURI" viram "Yuri": o painel fica organizado mesmo quando
+        // cada convidado digita de um jeito. Preposições ficam minúsculas.
+        const MINUSCULAS = ['da','de','di','do','du','das','dos','e'];
+        function formatarNome(s) {
+            return s.trim().replace(/\s+/g, ' ').toLocaleLowerCase('pt-BR')
+                .split(' ')
+                .map((p, i) => (i > 0 && MINUSCULAS.includes(p))
+                    ? p
+                    : p.charAt(0).toLocaleUpperCase('pt-BR') + p.slice(1))
+                .join(' ');
+        }
 
         function parseNames(raw) {
-            const parts = raw.trim().split(',').map(s => s.trim()).filter(Boolean);
-            const out = [];
-            for (const p of parts) {
-                if (inList(p)) { out.push(p); continue; }
-                const tokens = p.split(/\s+/).filter(Boolean);
-                if (tokens.length > 1) tokens.forEach(t => out.push(t));
-                else out.push(p);
-            }
-            return out;
+            return raw.trim().split(',').map(s => formatarNome(s)).filter(Boolean);
+        }
+
+        function showRsvpError(html) {
+            rsvpError.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#b91c1c;margin-right:.4rem;"></i>' + html;
+            rsvpError.classList.add('show');
+            guestInput.classList.add('error');
+            setTimeout(() => guestInput.classList.remove('error'), 5000);
         }
 
         function activateGifBackground() {
@@ -1630,10 +1628,9 @@
             if (names.length && this.value.trim()) {
                 namePreview.classList.add('show');
                 names.forEach(n => {
-                    const ok = !guestListReady || !guestList.length || inList(n);
                     const s = document.createElement('span');
-                    s.className = 'chip ' + (ok ? 'ok' : 'bad');
-                    s.innerHTML = '<i class="fa-solid fa-' + (ok ? 'user' : 'circle-xmark') + '" style="font-size:.6rem;" aria-hidden="true"></i> ' + n;
+                    s.className = 'chip ok';
+                    s.innerHTML = '<i class="fa-solid fa-user" style="font-size:.6rem;" aria-hidden="true"></i> ' + n;
                     namePreview.appendChild(s);
                 });
                 const c = document.createElement('span');
@@ -1753,27 +1750,29 @@
             const names = parseNames(raw);
             if (!names.length) return;
 
-            // Valida se os nomes já existem na lista de presenças (guests)
+            // Avisa se o nome já confirmou. Antes isso baixava a lista inteira de
+            // convidados para o navegador — qualquer visitante conseguia ler quem
+            // vinha à festa. Agora uma função no banco devolve só os nomes repetidos.
             if (supabaseClient) {
                 try {
-                    const btnHtml = document.querySelector('.btn-yes').innerHTML;
-                    document.querySelector('.btn-yes').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando...';
-                    
-                    const { data, error } = await supabaseClient.from('guests').select('guest_names');
-                    document.querySelector('.btn-yes').innerHTML = btnHtml;
-                    
-                    if (!error && data) {
-                        const allConfirmed = data.flatMap(d => d.guest_names.split(',').map(n => n.trim().toLowerCase()));
-                        const duplicates = names.filter(n => allConfirmed.includes(n.toLowerCase()));
-                        
-                        if (duplicates.length > 0) {
-                            rsvpError.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#b91c1c;margin-right:.4rem;"></i>'
-                                + 'O nome <strong>' + duplicates.join(', ') + '</strong> já confirmou presença. Por favor, escreva também o <strong>sobrenome</strong> para sabermos quem é!';
-                            rsvpError.classList.add('show');
-                            guestInput.classList.add('error');
-                            setTimeout(() => guestInput.classList.remove('error'), 5000);
-                            return;
-                        }
+                    // A classe é "btn-confirm yes". O seletor antigo (.btn-yes) não
+                    // casava com nada: dava TypeError e o catch engolia a validação,
+                    // que por isso nunca chegou a rodar.
+                    const btnYes = document.querySelector('.btn-confirm.yes');
+                    const btnHtml = btnYes.innerHTML;
+                    btnYes.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando...';
+
+                    const { data, error } = await supabaseClient
+                        .rpc('nome_ja_confirmado', { p_nomes: names });
+                    btnYes.innerHTML = btnHtml;
+
+                    if (!error && data && data.length > 0) {
+                        const plural = data.length > 1;
+                        showRsvpError('Já temos uma confirmação com o nome <strong>' + data.join(', ') + '</strong>. '
+                            + 'Se ' + (plural ? 'não forem vocês' : 'não for você') + ', escreva '
+                            + '<strong>nome e sobrenome</strong> — assim sabemos quem é quem. '
+                            + '<br><span style="font-size:.72rem;opacity:.85;">Ex.: em vez de "Maria", escreva "Maria Vidal".</span>');
+                        return;
                     }
                 } catch(e) {
                     console.warn(e);
@@ -1797,10 +1796,11 @@
                     compSection.style.opacity = '1';
                 }, 400);
             } else {
-                // Salvar no BD
-                saveRSVP(names, false, []);
-                
-                // Mostra UI
+                const res = await saveRSVP(names, false, []);
+                if (!res.ok) {
+                    showRsvpError('Não conseguimos registrar sua resposta agora. Verifique sua internet e tente novamente.');
+                    return;
+                }
                 showPostRsvpState(false);
             }
         };
@@ -1822,7 +1822,7 @@
                 <span style="background: ${type === 'Adulto' ? '#e0f2fe' : '#dcfce7'}; color: ${type === 'Adulto' ? '#0369a1' : '#15803d'}; padding: 0.4rem 0.6rem; border-radius: 8px; font-weight: bold; font-size: 0.8rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                     ${type}
                 </span>
-                <input type="text" placeholder="Nome" class="rsvp-input" style="flex: 1; margin: 0; padding: 0.6rem; font-size: 0.9rem; border-radius: 8px;" oninput="window.currentCompanions[${index}].name = this.value" />
+                <input type="text" placeholder="Nome (opcional)" class="rsvp-input" autocapitalize="words" style="flex: 1; margin: 0; padding: 0.6rem; font-size: 0.9rem; border-radius: 8px;" oninput="window.currentCompanions[${index}].name = this.value" />
                 <button onclick="removeCompanion(${index})" style="background: #fee2e2; color: #b91c1c; border: none; padding: 0.6rem; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: background 0.2s;" onmouseover="this.style.background='#fecaca'" onmouseout="this.style.background='#fee2e2'">
                     <i class="fa-solid fa-trash"></i>
                 </button>
@@ -1835,32 +1835,38 @@
             document.getElementById('companion-' + index).style.display = 'none';
         };
 
-        window.finalizeRSVP = function() {
-            // filter out nulls and empties
-            const validCompanions = window.currentCompanions.filter(c => c && c.name.trim() !== '').map(c => ({
+        window.finalizeRSVP = async function() {
+            // O nome do acompanhante é opcional — basta marcar se é Adulto ou Criança.
+            // Só descarta os que foram removidos (null).
+            const validCompanions = window.currentCompanions.filter(Boolean).map(c => ({
                 type: c.type,
-                name: c.name.trim()
+                name: formatarNome(c.name)
             }));
             const names = window.currentConfirmedNames || [];
-            
+
             // Show loading
             const btn = document.querySelector('#companions-section .btn-confirm:last-child');
             const originalHtml = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
             btn.style.pointerEvents = 'none';
-            
-            // Save to DB
-            saveRSVP(names, true, validCompanions);
-            
-            // Transition
+
+            // Espera o banco responder antes de comemorar: antes a tela de sucesso
+            // aparecia num setTimeout fixo, mesmo se o insert tivesse falhado.
+            const res = await saveRSVP(names, true, validCompanions);
+
+            if (!res.ok) {
+                btn.innerHTML = originalHtml;
+                btn.style.pointerEvents = 'auto';
+                alert('Não conseguimos salvar sua confirmação agora.\nVerifique sua internet e toque em "Confirmar Todos" de novo.');
+                return;
+            }
+
+            const compSection = document.getElementById('companions-section');
+            compSection.style.opacity = '0';
             setTimeout(() => {
-                const compSection = document.getElementById('companions-section');
-                compSection.style.opacity = '0';
-                setTimeout(() => {
-                    compSection.style.display = 'none';
-                    showPostRsvpState(true);
-                }, 400);
-            }, 600);
+                compSection.style.display = 'none';
+                showPostRsvpState(true);
+            }, 400);
         };
 
         window.showPostRsvpState = async function(knownIsGoing = null) {
@@ -1879,20 +1885,9 @@
                 resultSection.classList.add('visible');
             }, 400);
 
-            let isGoing = true;
-            if (knownIsGoing !== null) {
-                isGoing = knownIsGoing;
-            } else if (window.currentConfirmedNames) {
-                try {
-                    const { data } = await supabaseClient.from('guests')
-                        .select('is_going')
-                        .eq('guest_names', window.currentConfirmedNames.join(', '))
-                        .limit(1).single();
-                    if (data) isGoing = data.is_going;
-                } catch (e) {
-                    console.warn(e);
-                }
-            }
+            // Os dois chamadores sempre informam a resposta. O ramo que consultava o
+            // banco era código morto — e agora nem funcionaria: ler a tabela exige login.
+            const isGoing = knownIsGoing !== null ? knownIsGoing : true;
 
             const names = window.currentConfirmedNames || [];
             resNames.innerHTML = '';
