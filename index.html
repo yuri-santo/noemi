@@ -1273,7 +1273,18 @@
                                 Sua presença é nosso maior presente! Mas caso queira mimar a Noemi, aqui estão os tamanhos:
                             </p>
                             <div id="gift-list-container" style="display: grid; gap: 0.5rem;">
-                                <!-- Itens de presente serão carregados do Supabase aqui -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
+                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-shapes" style="color: #87CEEB; width: 20px;"></i> Brinquedo</span>
+                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Menina (+1 ano)</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
+                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-shirt" style="color: #F4A7B9; width: 20px;"></i> Roupinha</span>
+                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Tamanho 1 ou 2</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
+                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-shoe-prints" style="color: #87CEEB; width: 20px;"></i> Calçado</span>
+                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Tamanho 20</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1283,9 +1294,6 @@
                 <div style="display:flex; flex-direction:column; gap:0.5rem; align-items:center; margin-top:1.5rem;">
                     <button id="btn-reset-rsvp" class="btn-reset" onclick="resetRSVP()" aria-label="Refazer confirmação">
                         <i class="fa-solid fa-rotate-left"></i> Refazer confirmação
-                    </button>
-                    <button id="btn-cancel-rsvp" class="btn-reset" onclick="cancelRSVP()" aria-label="Cancelar presença" style="display:none; color: #b91c1c; border-color: #fecaca; background: #fef2f2;">
-                        <i class="fa-solid fa-xmark"></i> Cancelar presença / Alterar resposta
                     </button>
                 </div>
             </div>
@@ -1360,58 +1368,6 @@
         let supabaseClient = null;
         if (SUPABASE_URL !== "SUA_URL_AQUI") {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            loadEventDetails();
-            loadGiftsFromSupabase();
-        }
-
-        async function loadGiftsFromSupabase() {
-            if (!supabaseClient) return;
-            const { data, error } = await supabaseClient.from('gift_suggestions').select('*').order('created_at', { ascending: true });
-            if (!error && data && data.length > 0) {
-                const container = document.getElementById('gift-list-container');
-                if (!container) return;
-                const colors = ['#87CEEB', '#F4A7B9', '#87CEEB', '#F4A7B9', '#FFD700'];
-                container.innerHTML = data.map((item, index) => {
-                    const color = colors[index % colors.length];
-                    return `
-                    <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
-                        <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid ${item.icon}" style="color: ${color}; width: 20px;"></i> ${item.category}</span>
-                        <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">${item.size_info}</span>
-                    </div>`;
-                }).join('');
-            }
-        }
-
-        async function loadEventDetails() {
-            if (!supabaseClient) return;
-            const { data, error } = await supabaseClient.from('event_details').select('*').limit(1).single();
-            if (!error && data) {
-                /* if (data.event_date) {
-                    const d = new Date(data.event_date);
-                    const days = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-                    const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-                    document.getElementById('display-date-day').innerText = days[d.getDay()];
-                    document.getElementById('display-date-month').innerText = d.getDate() + ' de ' + months[d.getMonth()];
-                    document.getElementById('display-time').innerText = d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
-                } */
-                if (data.show_location === false) {
-                    document.getElementById('display-address').innerHTML = '<strong><i class="fa-solid fa-house"></i> Local a definir</strong><br>Aguarde mais informações';
-                    document.getElementById('btn-map-google').style.display = 'none';
-                    document.getElementById('btn-map-waze').style.display = 'none';
-                } else if (data.location_address) {
-                    document.getElementById('display-address').innerHTML = '<strong><i class="fa-solid fa-house"></i> ' + data.location_address.replace(/\\n/g, '<br>') + '</strong>';
-                    document.getElementById('btn-map-google').style.display = 'inline-flex';
-                    document.getElementById('btn-map-waze').style.display = 'inline-flex';
-                    if (data.location_url) {
-                        document.getElementById('btn-map-google').href = data.location_url;
-                        document.getElementById('btn-map-waze').href = data.location_url;
-                    } else {
-                        const encoded = encodeURIComponent(data.location_address);
-                        document.getElementById('btn-map-google').href = 'https://www.google.com/maps/search/?api=1&query=' + encoded;
-                        document.getElementById('btn-map-waze').href = 'https://www.waze.com/ul?q=' + encoded;
-                    }
-                }
-            }
         }
 
         function saveRSVP(names, isGoing) {
@@ -1439,12 +1395,6 @@
                     is_going: rsvpData.is_going
                 }]).then(() => {
                     console.log("Salvo no Supabase com sucesso.");
-                    // Marcar como confirmado na lista de allowed_guests
-                    supabaseClient.from('allowed_guests')
-                        .update({ has_confirmed: true })
-                        .in('name', names)
-                        .then(() => console.log("Atualizado has_confirmed com sucesso."))
-                        .catch(err => console.error("Erro ao atualizar has_confirmed:", err));
                 }).catch(err => {
                     console.error("Erro ao salvar no Supabase:", err);
                 });
@@ -1773,45 +1723,31 @@
             const names = parseNames(raw);
             if (!names.length) return;
 
-            /* Aguarda a lista de convidados carregar antes de validar */
-            if (!guestListReady) {
-                rsvpError.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="color:var(--darkblue);margin-right:.4rem;"></i>Carregando lista de convidados, aguarde...';
-                rsvpError.classList.add('show');
-                try { await guestListPromise; } catch {}
-                rsvpError.classList.remove('show');
-                if (!guestListReady) {
-                    rsvpError.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#b91c1c;margin-right:.4rem;"></i>Não foi possível carregar a lista de convidados. Tente novamente.';
-                    rsvpError.classList.add('show');
-                    return;
+            // Valida se os nomes já existem na lista de presenças (guests)
+            if (supabaseClient) {
+                try {
+                    const btnHtml = document.querySelector('.btn-yes').innerHTML;
+                    document.querySelector('.btn-yes').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando...';
+                    
+                    const { data, error } = await supabaseClient.from('guests').select('guest_names');
+                    document.querySelector('.btn-yes').innerHTML = btnHtml;
+                    
+                    if (!error && data) {
+                        const allConfirmed = data.flatMap(d => d.guest_names.split(',').map(n => n.trim().toLowerCase()));
+                        const duplicates = names.filter(n => allConfirmed.includes(n.toLowerCase()));
+                        
+                        if (duplicates.length > 0) {
+                            rsvpError.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#b91c1c;margin-right:.4rem;"></i>'
+                                + 'O nome <strong>' + duplicates.join(', ') + '</strong> já confirmou presença. Por favor, escreva também o <strong>sobrenome</strong> para sabermos quem é!';
+                            rsvpError.classList.add('show');
+                            guestInput.classList.add('error');
+                            setTimeout(() => guestInput.classList.remove('error'), 5000);
+                            return;
+                        }
+                    }
+                } catch(e) {
+                    console.warn(e);
                 }
-            }
-
-            /* Valida se os nomes estão na lista */
-            if (guestData.length > 0) {
-                const notFound = names.filter(n => !getGuest(n));
-                if (notFound.length) {
-                    rsvpError.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#b91c1c;margin-right:.4rem;"></i>'
-                        + notFound.map(n=>'<strong>'+n+'</strong>').join(', ')
-                        + ' não está cadastrado na lista de convidados.';
-                    rsvpError.classList.add('show');
-                    guestInput.classList.add('error');
-                    setTimeout(() => guestInput.classList.remove('error'), 3000);
-                    return;
-                }
-                
-                // Se algum dos convidados já confirmou, passa direto pra tela pós-confirmação
-                const alreadyConfirmed = names.some(n => getGuest(n) && getGuest(n).has_confirmed);
-                if (alreadyConfirmed) {
-                    window.currentConfirmedNames = names;
-                    showPostRsvpState();
-                    return;
-                }
-            } else {
-                /* Lista vazia apos carregar = arquivo convidados.txt nao encontrado ou vazio */
-                rsvpError.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color:#b91c1c;margin-right:.4rem;"></i>'
-                    + 'Lista de convidados indisponível. Recarregue a página ou entre em contato com o organizador.';
-                rsvpError.classList.add('show');
-                return;
             }
 
             // Atualizar variáveis globais
@@ -1893,7 +1829,6 @@
                     setTimeout(showBirthdayOverlay, 1500);
                 }
                 
-                document.getElementById('btn-cancel-rsvp').style.display = 'inline-flex';
                 document.getElementById('btn-reset-rsvp').style.display = 'none';
 
             } else {
@@ -1915,35 +1850,11 @@
                 const giftBox = document.getElementById('gift-box');
                 if (giftBox) giftBox.style.display = 'none';
                 
-                document.getElementById('btn-cancel-rsvp').style.display = 'inline-flex';
                 document.getElementById('btn-reset-rsvp').style.display = 'none';
             }
         };
 
-        window.cancelRSVP = async function() {
-            if (!window.currentConfirmedNames) return;
-            if (!confirm('Deseja realmente cancelar/alterar sua confirmação?')) return;
-            
-            try {
-                const btn = document.getElementById('btn-cancel-rsvp');
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cancelando...';
-                btn.style.pointerEvents = 'none';
 
-                const namesStr = window.currentConfirmedNames.join(', ');
-                await supabaseClient.from('guests').delete().eq('guest_names', namesStr);
-                
-                for (const name of window.currentConfirmedNames) {
-                    await supabaseClient.from('allowed_guests').update({ has_confirmed: false }).ilike('name', name);
-                }
-                
-                alert('Sua confirmação foi cancelada com sucesso. Você já pode responder novamente se desejar!');
-                window.location.reload();
-            } catch (err) {
-                console.error("Erro ao cancelar presença", err);
-                alert('Houve um erro ao cancelar. Tente novamente.');
-                window.location.reload();
-            }
-        };
 
 
         window.resetRSVP = function () {

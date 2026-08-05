@@ -114,21 +114,7 @@
             </div>
         </header>
 
-        <!-- TABS DE NAVEGAÇÃO -->
-        <div class="flex flex-wrap gap-2 mb-2">
-            <button onclick="switchTab('rsvp')" id="tab-rsvp" class="flex-1 py-2 px-2 bg-ark-darkblue text-white rounded-xl font-bold shadow-md transition-all text-xs lg:text-sm min-w-[100px]">
-                <i class="fa-solid fa-envelope-open-text mr-1"></i> RSVP
-            </button>
-            <button onclick="switchTab('guests')" id="tab-guests" class="flex-1 py-2 px-2 bg-white text-gray-500 rounded-xl font-bold shadow-sm transition-all hover:bg-gray-50 border border-gray-200 text-xs lg:text-sm min-w-[100px]">
-                <i class="fa-solid fa-users-gear mr-1"></i> Convidados
-            </button>
-            <button onclick="switchTab('event')" id="tab-event" class="flex-1 py-2 px-2 bg-white text-gray-500 rounded-xl font-bold shadow-sm transition-all hover:bg-gray-50 border border-gray-200 text-xs lg:text-sm min-w-[100px]">
-                <i class="fa-solid fa-calendar-day mr-1"></i> Evento
-            </button>
-            <button onclick="switchTab('gifts')" id="tab-gifts" class="flex-1 py-2 px-2 bg-white text-gray-500 rounded-xl font-bold shadow-sm transition-all hover:bg-gray-50 border border-gray-200 text-xs lg:text-sm min-w-[100px]">
-                <i class="fa-solid fa-gift mr-1"></i> Presentes
-            </button>
-        </div>
+
 
         <!-- ABA 1: RSVP (CONFIRMAÇÕES) -->
         <div id="view-rsvp" class="space-y-6">
@@ -199,6 +185,7 @@
                             <th class="py-4 px-4 text-center">Qtd. Pessoas</th>
                             <th class="py-4 px-4 text-center">Status</th>
                             <th class="py-4 pr-6 pl-4 text-right">Data do Registro</th>
+                            <th class="py-4 px-4 text-center">Ações</th>
                         </tr>
                     </thead>
                     <tbody id="table-body" class="divide-y divide-gray-100">
@@ -213,108 +200,7 @@
         </div>
         </div> <!-- FIM ABA 1 -->
 
-        <!-- ABA 2: GERENCIAR CONVIDADOS -->
-        <div id="view-guests" class="space-y-6 hidden">
-            <div class="glass rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start">
-                
-                <!-- Formulário Adicionar -->
-                <div class="w-full md:w-1/3 space-y-4">
-                    <h2 class="text-xl font-cute text-ark-darkblue"><i class="fa-solid fa-user-plus text-ark-gold mr-2"></i> Novo Convidado</h2>
-                    <p class="text-xs text-gray-500">Adicione os nomes que aparecerão nas sugestões do convite (auto-completar).</p>
-                    
-                    <div class="space-y-3 mt-4">
-                        <input type="text" id="new-guest-name" placeholder="Ex: Tia Maria e Tio João" class="w-full bg-white border border-gray-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-ark-gold/50 transition-all" onkeypress="if(event.key === 'Enter') addGuest()">
-                        <button onclick="addGuest()" class="w-full py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold shadow-md transition flex justify-center items-center gap-2">
-                            <i class="fa-solid fa-plus"></i> Adicionar
-                        </button>
-                    </div>
-                </div>
 
-                <!-- Tabela Convidados -->
-                <div class="w-full md:w-2/3 border-t md:border-t-0 md:border-l border-gray-200 pt-6 md:pt-0 md:pl-6 h-[500px] flex flex-col">
-                    <h2 class="text-xl font-cute text-ark-darkblue mb-4"><i class="fa-solid fa-list-ul text-ark-gold mr-2"></i> Lista Permitida</h2>
-                    <div class="overflow-y-auto overflow-x-auto custom-scrollbar flex-1 border border-gray-100 rounded-2xl bg-white/50">
-                        <table class="w-full text-left text-sm whitespace-nowrap">
-                            <thead class="bg-gray-50/80 sticky top-0 z-10 backdrop-blur-md">
-                                <tr class="text-xs uppercase tracking-wider text-gray-500 font-bold border-b border-gray-200">
-                                    <th class="py-4 pl-6 pr-4">Nome do Convidado</th>
-                                    <th class="py-4 px-4 text-center w-24">Ação</th>
-                                </tr>
-                            </thead>
-                            <tbody id="guests-table-body" class="divide-y divide-gray-100">
-                                <!-- Conteúdo convidados -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-        </div> <!-- FIM ABA 2 -->
-
-        <!-- ABA 3: EVENTO -->
-        <div id="view-event" class="hidden space-y-6">
-            <div class="glass rounded-2xl p-6 shadow-sm border border-white">
-                <h3 class="text-xl font-cute text-gray-800 mb-4 border-b pb-2"><i class="fa-solid fa-calendar-day text-blue-500"></i> Detalhes do Evento</h3>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Data e Hora</label>
-                        <input type="datetime-local" id="input-event-date" class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Localização (Endereço)</label>
-                        <textarea id="input-event-location" rows="3" class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Ex: Rua das Capoeiras, 36\nBairro São Gabriel\n..."></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Link do Mapa (Waze ou Google Maps)</label>
-                        <input type="url" id="input-event-location-url" class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="https://waze.com/... ou https://maps.app.goo.gl/...">
-                    </div>
-                    <div class="flex items-center">
-                        <input type="checkbox" id="input-event-show-location" class="w-5 h-5 text-blue-500 rounded focus:ring-blue-400 border-gray-300" checked>
-                        <label for="input-event-show-location" class="ml-2 block text-sm font-bold text-gray-700">Exibir Local no Convite (Se desmarcado, exibirá "Local a definir")</label>
-                    </div>
-                    <button onclick="saveEventDetails()" class="w-full py-2 bg-blue-500 text-white rounded-xl font-bold hover:bg-blue-600 transition-colors shadow-md">
-                        <i class="fa-solid fa-save mr-2"></i> Salvar Detalhes
-                    </button>
-                    <p id="event-save-msg" class="text-green-600 text-sm font-bold hidden mt-2 text-center">Salvo com sucesso!</p>
-                </div>
-            </div>
-        </div> <!-- FIM ABA 3 -->
-
-        <!-- ABA 4: PRESENTES -->
-        <div id="view-gifts" class="hidden space-y-6">
-            <div class="glass rounded-2xl p-6 shadow-sm border border-white">
-                <h3 class="text-xl font-cute text-gray-800 mb-4 border-b pb-2"><i class="fa-solid fa-gift text-pink-500"></i> Adicionar Presente</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <input type="text" id="input-gift-cat" placeholder="Categoria (Ex: Fraldas)" class="px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400">
-                    <input type="text" id="input-gift-size" placeholder="Tamanho/Info (Ex: G e GG)" class="px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400">
-                    <input type="text" id="input-gift-icon" placeholder="Ícone FontAwesome (Ex: fa-baby)" class="px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-400">
-                </div>
-                <button onclick="addGift()" class="w-full py-2 bg-pink-500 text-white rounded-xl font-bold hover:bg-pink-600 transition-colors shadow-md">
-                    <i class="fa-solid fa-plus mr-2"></i> Adicionar Sugestão
-                </button>
-            </div>
-
-            <div class="glass rounded-2xl shadow-sm border border-white overflow-hidden">
-                <div class="p-6 bg-white bg-opacity-50 border-b">
-                    <h3 class="text-xl font-cute text-gray-800"><i class="fa-solid fa-list text-gray-400"></i> Presentes Cadastrados</h3>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-gray-50 border-b text-gray-500 text-xs uppercase tracking-wider">
-                                <th class="p-4 font-bold">Ícone</th>
-                                <th class="p-4 font-bold">Categoria</th>
-                                <th class="p-4 font-bold">Tamanho/Info</th>
-                                <th class="p-4 font-bold text-center">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="gifts-table-body" class="divide-y divide-gray-100 bg-white">
-                            <tr><td colspan="4" class="p-4 text-center text-gray-400">Carregando...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div> <!-- FIM ABA 4 -->
 
     </div>
 
@@ -349,30 +235,7 @@
             }
         }
 
-        // TAB NAVIGATION
-        let activeTab = 'rsvp';
-        window.switchTab = function(tab) {
-            activeTab = tab;
-            const tabs = ['rsvp', 'guests', 'event', 'gifts'];
-            
-            tabs.forEach(t => {
-                const btn = document.getElementById('tab-' + t);
-                const view = document.getElementById('view-' + t);
-                
-                if (t === tab) {
-                    btn.className = "flex-1 py-2 px-2 bg-ark-darkblue text-white rounded-xl font-bold shadow-md transition-all text-xs lg:text-sm min-w-[100px]";
-                    view.classList.remove('hidden');
-                } else {
-                    btn.className = "flex-1 py-2 px-2 bg-white text-gray-500 rounded-xl font-bold shadow-sm transition-all hover:bg-gray-50 border border-gray-200 text-xs lg:text-sm min-w-[100px]";
-                    view.classList.add('hidden');
-                }
-            });
 
-            if (tab === 'rsvp') render();
-            if (tab === 'guests') renderGuests();
-            if (tab === 'event') renderEventDetails();
-            if (tab === 'gifts') renderGifts();
-        };
 
         // LÓGICA DE DADOS - RSVP
         (function() {
@@ -499,6 +362,11 @@
                             </td>
                             <td class="py-4 px-4 text-center">${statusHtml}</td>
                             <td class="py-4 pr-6 pl-4 text-right text-xs text-gray-400 font-medium group-hover:text-gray-600">${formatDate(r.timestamp)}</td>
+                            <td class="py-4 px-4 text-center">
+                                <button onclick="deleteRSVP('${r.names.join(', ').replace(/'/g, "\\'")}')" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition-colors" title="Excluir Registro">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </td>
                         </tr>
                     `;
                 }).join('');
@@ -534,6 +402,21 @@
                     searchQuery = '';
                     searchInput.value = '';
                     render();
+                }
+            };
+
+            window.deleteRSVP = async function(namesStr) {
+                if (!confirm(`Deseja realmente excluir o registro de ${namesStr}?`)) return;
+                
+                try {
+                    if (supabaseClient) {
+                        await supabaseClient.from('guests').delete().eq('guest_names', namesStr);
+                    }
+                    alert('Registro excluído com sucesso.');
+                    render();
+                } catch (err) {
+                    console.error("Erro ao excluir", err);
+                    alert("Erro ao excluir registro.");
                 }
             };
 
