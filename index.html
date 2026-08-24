@@ -651,7 +651,6 @@
         }
 
         /* Endereço */
-        #address-box { display: none; }
         .address-card {
             background: linear-gradient(to bottom, #fff, #f9fafb);
             border: 1px solid #e5e7eb;
@@ -1200,6 +1199,32 @@
                         <span class="info-label">Começa as 19 Hrs e termina as 23 Hrs</span>
                     </div>
                 </div>
+
+                <!-- Endereço -->
+                <div id="address-box" style="margin-top: 1.25rem;">
+                    <div class="address-card">
+                        <div class="address-top"></div>
+                        <div class="address-body">
+                            <p class="address-title">
+                                <i class="fa-solid fa-map-location-dot"></i>
+                                Local da Celebração
+                            </p>
+                            <p class="address-text" id="display-address">
+                                <strong><i class="fa-solid fa-house"></i> Rua Nossa Sra. do Amparo, 35</strong><br>
+                                Bairro Ouro Minas<br>
+                                Belo Horizonte — Minas Gerais<br>Brasil
+                            </p>
+                            <a id="btn-map-google" href="https://maps.google.com/maps/place//data=!4m2!3m1!1s0xa69b5ef33a848b:0x8ed47e7d8a8e1514?entry=s&sa=X&ved=2ahUKEwjp8P6GkqGWAxXuGbkGHeUnPesQ4kB6BAgVEAA&hl=pt"
+                               target="_blank" rel="noopener noreferrer" class="btn-map google">
+                                <i class="fa-solid fa-route"></i> Abrir no Google Maps
+                            </a>
+                            <a id="btn-map-waze" href="https://www.waze.com/ul?q=Rua+Nossa+Sra+do+Amparo+35+Ouro+Minas+Belo+Horizonte"
+                               target="_blank" rel="noopener noreferrer" class="btn-map waze">
+                                <i class="fa-brands fa-waze"></i> Abrir no Waze
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="gold-divider" style="margin-top:1.5rem;"><span></span><i class="fa-solid fa-sailboat"></i><span></span></div>
@@ -1240,11 +1265,6 @@
                         <i class="fa-solid fa-circle-xmark"></i>
                         Com pesar, não poderei ir
                     </button>
-
-                    <p class="lock-note">
-                        <i class="fa-solid fa-lock"></i>
-                        O endereço será revelado após a confirmação
-                    </p>
                 </div>
             </div>
 
@@ -1285,32 +1305,6 @@
                 <div id="res-names" style="margin-bottom:.7rem; text-align:center;"></div>
                 <p id="res-msg" class="result-msg"></p>
 
-                <!-- Endereço -->
-                <div id="address-box">
-                    <div class="address-card">
-                        <div class="address-top"></div>
-                        <div class="address-body">
-                            <p class="address-title">
-                                <i class="fa-solid fa-map-location-dot"></i>
-                                Local da Celebração
-                            </p>
-                            <p class="address-text" id="display-address">
-                                <strong><i class="fa-solid fa-house"></i> Rua Nossa Sra. do Amparo, 35</strong><br>
-                                Bairro Ouro Minas<br>
-                                Belo Horizonte — Minas Gerais<br>Brasil
-                            </p>
-                            <a id="btn-map-google" href="https://maps.google.com/maps/place//data=!4m2!3m1!1s0xa69b5ef33a848b:0x8ed47e7d8a8e1514?entry=s&sa=X&ved=2ahUKEwjp8P6GkqGWAxXuGbkGHeUnPesQ4kB6BAgVEAA&hl=pt"
-                               target="_blank" rel="noopener noreferrer" class="btn-map google">
-                                <i class="fa-solid fa-route"></i> Abrir no Google Maps
-                            </a>
-                            <a id="btn-map-waze" href="https://www.waze.com/ul?q=Rua+Nossa+Sra+do+Amparo+35+Ouro+Minas+Belo+Horizonte"
-                               target="_blank" rel="noopener noreferrer" class="btn-map waze">
-                                <i class="fa-brands fa-waze"></i> Abrir no Waze
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Sugestão de Presentes -->
                 <div id="gift-box" style="display:none; margin-top: 1.25rem;">
                     <div class="address-card">
@@ -1321,7 +1315,7 @@
                                 Aqui estão algumas sugestões
                             </p>
                             <p class="address-text" style="font-size: 0.75rem; text-align: center; margin-bottom: 1rem;">
-                                Sua presença é nosso maior presente! Mas caso queira mimar a Noemi, aqui estão os tamanhos:
+                                Sua presença é nosso maior presente! Mas, caso queira mimar a Noemi, aqui estão os tamanhos:
                             </p>
                             <div id="gift-list-container" style="display: grid; gap: 0.5rem;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
@@ -1483,7 +1477,6 @@
         const bdText        = document.getElementById('bd-text');
         const rsvpSection   = document.getElementById('rsvp-section');
         const resultSection = document.getElementById('result-section');
-        const addressBox    = document.getElementById('address-box');
         const resIcon       = document.getElementById('res-icon');
         const resRing       = document.getElementById('res-ring');
         const resTitle      = document.getElementById('res-title');
@@ -1493,7 +1486,6 @@
         const namePreview   = document.getElementById('name-preview');
         const rsvpError     = document.getElementById('rsvp-error-msg');
         const particles     = document.getElementById('particles');
-        const lockNote      = document.querySelector('.lock-note');
 
         let musicPlaying = false;
         let muted        = false;
@@ -1917,7 +1909,6 @@
                     ).join('');
                 }
 
-                addressBox.style.display = 'block';
                 const giftBox = document.getElementById('gift-box');
                 if (giftBox) giftBox.style.display = 'block';
                 
@@ -1944,7 +1935,6 @@
                     +(pl?'vocês':'você')+' grandemente! '
                     +'<i class="fa-solid fa-hands-praying" style="color:var(--gold);margin-left:4px;"></i>';
 
-                addressBox.style.display = 'none';
                 const giftBox = document.getElementById('gift-box');
                 if (giftBox) giftBox.style.display = 'none';
                 
