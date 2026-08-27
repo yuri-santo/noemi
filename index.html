@@ -1229,6 +1229,36 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Sugestão de Presentes (Sempre Visível) -->
+                <div id="gift-box" style="margin-top: 1.25rem;">
+                    <div class="address-card">
+                        <div class="address-top" style="background: linear-gradient(to right, #F4A7B9, #FFD700, #87CEEB);"></div>
+                        <div class="address-body">
+                            <p class="address-title">
+                                <i class="fa-solid fa-gift" style="color: var(--gold);"></i>
+                                Sugestão de Presente
+                            </p>
+                            <p class="address-text" style="font-size: 0.75rem; text-align: center; margin-bottom: 1rem;">
+                                Sua presença é nosso maior presente! Mas, caso queira mimar a Noemi, aqui estão os tamanhos:
+                            </p>
+                            <div id="gift-list-container" style="display: grid; gap: 0.5rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
+                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-puzzle-piece" style="color: #87CEEB; width: 20px;"></i> Brinquedo</span>
+                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Menina (12m+)</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
+                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-shirt" style="color: #F4A7B9; width: 20px;"></i> Roupinha</span>
+                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Tamanho 12m+ ou 18m+</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
+                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-shoe-prints" style="color: #87CEEB; width: 20px;"></i> Calçado</span>
+                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Tamanho 20</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="gold-divider" style="margin-top:1.5rem;"><span></span><i class="fa-solid fa-sailboat"></i><span></span></div>
@@ -1308,37 +1338,6 @@
                 <h3 id="res-title" class="result-title green"></h3>
                 <div id="res-names" style="margin-bottom:.7rem; text-align:center;"></div>
                 <p id="res-msg" class="result-msg"></p>
-
-                <!-- Sugestão de Presentes -->
-                <div id="gift-box" style="display:none; margin-top: 1.25rem;">
-                    <div class="address-card">
-                        <div class="address-top" style="background: linear-gradient(to right, #F4A7B9, #FFD700, #87CEEB);"></div>
-                        <div class="address-body">
-                            <p class="address-title">
-                                <i class="fa-solid fa-gift" style="color: var(--gold);"></i>
-                                Aqui estão algumas sugestões
-                            </p>
-                            <p class="address-text" style="font-size: 0.75rem; text-align: center; margin-bottom: 1rem;">
-                                Sua presença é nosso maior presente! Mas, caso queira mimar a Noemi, aqui estão os tamanhos:
-                            </p>
-                            <div id="gift-list-container" style="display: grid; gap: 0.5rem;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
-                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-puzzle-piece" style="color: #87CEEB; width: 20px;"></i> Brinquedo</span>
-                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Menina (+1 ano)</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
-                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-shirt" style="color: #F4A7B9; width: 20px;"></i> Roupinha</span>
-                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Tamanho 1 ou 2</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; background: #f9fafb; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid #e5e7eb;">
-                                    <span style="font-size: 0.8rem; font-weight: 600; color: #4b5563;"><i class="fa-solid fa-shoe-prints" style="color: #87CEEB; width: 20px;"></i> Calçado</span>
-                                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--brown);">Tamanho 20</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
 
                 <div style="display:flex; flex-direction:column; gap:0.5rem; align-items:center; margin-top:1.5rem;">
                     <button id="btn-reset-rsvp" class="btn-reset" onclick="resetRSVP()" aria-label="Refazer confirmação">
